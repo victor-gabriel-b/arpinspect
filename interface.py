@@ -20,10 +20,10 @@ caminho_conf = "/etc/arpdef/conf"
 caminho_log = "/var/log/ArpDefender"
 
 def rodar(comando):
-  saida = subprocess.Popen(comando, encoding="utf-8",shell=True, 
+  saida = subprocess.Popen(comando, shell=True, 
            stdout=subprocess.PIPE, 
            stderr=subprocess.STDOUT)
-  return saida.stdout.read().split("\n")[1]
+  return saida.stdout.read().decode("utf-8").split("\n")[1]
 
 
 while True:
@@ -41,22 +41,23 @@ while True:
       for i in range(len(configs)):
         config = configs[i].split("=")
         str_valores += "{}\t|{}|".format(config[0], config[1].replace("\n",""))
-        
+   
     # Mostrando a tela e obtendo input
     config_alterada = rodar('zenity --forms                                   \
       --text "Ver e editar configurações"  \
       --add-entry "Valor da configuração" --add-list="Valor e nome da configuração"    \
       --column-values "Config|Valor"               \
-      --list-values="{}" --show-header'.format(str_valores))
+      --list-values="{}" --show-header'.format(str_valores)) 
 
+    config_alterada = config_alterada.split("\t")[0]	
     config_alterada = config_alterada.split("|")
 
-    # Alterando a configuração na lista
+    # Alterando a configuração na lista		
     for i in range(len(configs)):
       if configs[i].split("=")[0].replace("\n","").replace("\t","") == config_alterada[1].replace("\n","").replace("\t",""):
         configs[i] = "{}={}\n".format(config_alterada[1].replace("\t",""), config_alterada[0])
-        break
-    
+        break	    
+
     # Escrevendo as novas configurações no arquivo
     with open(caminho_conf, "w") as arq:
       arq.writelines(configs)
