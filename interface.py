@@ -15,9 +15,9 @@
 
 import subprocess
 
-caminho_senha = "/etc/arpdef/passwd"
-caminho_conf = "/etc/arpdef/conf"
-caminho_log = "/var/log/ArpDefender"
+caminho_senha = "/etc/arpinspect/passwd"
+caminho_conf = "/etc/arpinspect/conf"
+caminho_log = "/var/log/arpinspect"
 
 def rodar(comando):
   saida = subprocess.Popen(comando, shell=True, 
