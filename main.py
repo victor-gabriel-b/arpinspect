@@ -197,7 +197,6 @@ def trata_pacote(pacote):
 
 # Função pra enviar um email
 def enviar_email(assunto, conteudo):
-  return
   global senha
   global email_origem
   
