@@ -150,7 +150,7 @@ def obter_config(caminho_conf):
               os.system("echo 0 > /proc/sys/net/ipv4/conf/all/arp_accept")
 
           elif nome == "email":
-            email_origem = valor.replace("\n", " ")
+            email_origem = valor.replace("\n", "")
  
   except:
     # Criar o arquivo com as configurações padrão, e então acessar novamente
