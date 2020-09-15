@@ -210,12 +210,10 @@ def enviar_email(assunto, conteudo):
   mensagem = 'Subject: {}\n\n{}'.format(assunto,conteudo).encode("utf-8")
 
   # Enviando o email
-  try:
-    server.sendmail(email_origem, email_origem, mensagem)
   
-  except:
-    with open(caminho_log, "a") as arq:
-      arq.write("Erro no envio do email, verifique se a senha está correta.\n")
+  server.sendmail(email_origem, email_origem, mensagem)
+  
+
 
 
 # Verifica cada combinacao ip/mac, vendo se é igual à do pacote recebido
