@@ -260,7 +260,6 @@ def main():
   for i in combs:
     if i.qtd_ocorr >= qtd_pacotes:
       # Ao detectar um ataque, o programa roda um comando de shell para criar uma regra no Iptables, definindo que todos os pacotes com aquele ip e mac devem ser descartados
-      print("bloquear: ", i.ip, i.mac)
       os.system("iptables -A INPUT -s {} -m mac --mac-source {} -j DROP".format(i.ip,i.mac))
       with open(caminho_log,"a") as arq:
         arq.write("Ataque Detectado (número excessivo de pacotes ARP Reply): {} {}\n".format(i.ip,i.mac))
