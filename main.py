@@ -42,6 +42,15 @@ caminho_senha = "/etc/arpinspect/passwd"
 caminho_conf = "/etc/arpinspect/conf"
 caminho_log = "/var/log/arpinspect"
 
+global configs_padrao
+configs_padrao = {
+  "tempo":"tempo=60",
+  "qtd":"qtd=5",
+  "mac_gateway":"#mac_gateway=",
+  "ip_gateway":"#ip_gateway=",
+  "block_arp_grat":"block_arp_grat=true",
+  "email":"email="
+}
 
 # Cria um arquivo no caminho especificado, criando também todos o diretorios necessários
 def criar_arquivo(caminho, conteudo=""):
@@ -57,6 +66,17 @@ def criar_arquivo(caminho, conteudo=""):
   with open(caminho,"w") as arq:
     arq.write(conteudo)
 
+# Atualiza o arquivo de configurações, alterando apenas uma linha
+def atualizar_arquivo(configs, config_alterada, caminho):
+  for i in range(len(configs)):
+    if configs[i].split("=")[0].replace("\n","").replace("\t","") == config_alterada[1].replace("\n","").replace("\t",""):
+      configs[i] = "{}={}\n".format(config_alterada[1].replace("\t",""), config_alterada[0])
+      break
+
+  with open(caminho, "w") as arq:
+    arq.writelines(configs)
+  
+
 # Variáveis de configuração
 global tempo_ciclo  # Duração de um ciclo de execução do programa
 global qtd_pacotes  # Quantidade de pacotes de um mesmo IP e mesmo MAC por ciclo que é considerada um ataque
@@ -71,7 +91,8 @@ global email_origem  # O email que será notificado e que enviára o email
 email_origem = ""
 
 # Obter configurações a partir do arquivo de configurações (normalmente /etc/arpinspect/conf)
-def obter_config(caminho_conf): 
+def obter_config(caminho_conf):
+  global configs_padrao
   global tempo_ciclo
   global qtd_pacotes
   global ip_gateway
@@ -80,13 +101,14 @@ def obter_config(caminho_conf):
 
   tempo_ciclo = 60
   qtd_pacotes = 5
-
+  # TODO
   # Tenta obter as configurações, caso dê erro, cria o arquivo de configuração (caso não exista) com as configurações padrão já dentro
   try:
     with open(caminho_conf, "r") as conf:
       cfg_lista = conf.readlines()
 
       # Itera pelas linhas do arquivo de configuração, tomando as ações necessárias para cada configurar
+
       for i in cfg_lista:
         # Esse if exclui as linhas que começam com #
         if i[0] != "#":
@@ -94,12 +116,15 @@ def obter_config(caminho_conf):
           valor.replace("\n", "")
           
           if nome == "tempo":
+            config_atual = "block_arp_grat"
             tempo_ciclo = int(valor)
           elif nome == "qtd":
+            config_atual = "qtd"
             qtd_pacotes = int(valor)
 
 
           elif nome == "ip_gateway":
+            config_atual = "block_arp_grat"
             # Ver se tem uma configuração manual válida, e usar a padrão (olha o que o sistema diz) caso não tenha
             partes = valor.split(".")
             
@@ -122,10 +147,12 @@ def obter_config(caminho_conf):
 
 
           elif nome == "mac_gateway":
+            config_atual = "block_arp_grat"
             # Ver se tem uma configuração manual válida, e usar a padrão (olha o que o sistema diz) caso não tenha
             partes = valor.split(":")
             qtd_letras = 0
             certo = True
+        
             for i in partes:
               for j in i:
                 qtd_letras += 1              
@@ -143,6 +170,7 @@ def obter_config(caminho_conf):
               mac_gateway = getmac.get_mac_address(ip=ip_gateway, network_request=True)
           
           elif nome == "block_arp_grat":
+            config_atual = "block_arp_grat"
             # Ativa ou desativa o bloqueio de ARP Replies gratuitos (usando uma configuração disponível no linux)
             if valor == "true":
               os.system("echo 1 > /proc/sys/net/ipv4/conf/all/arp_accept")
@@ -150,11 +178,17 @@ def obter_config(caminho_conf):
               os.system("echo 0 > /proc/sys/net/ipv4/conf/all/arp_accept")
 
           elif nome == "email":
+            config_atual = "email"
             email_origem = valor.replace("\n", "")
  
   except:
     # Criar o arquivo com as configurações padrão, e então acessar novamente
+
+    with open(caminho_conf, "r") as conf:
+      atualizar_arquivo(conf.readlines(), [config_atual, configs_padrao[config_atual]], caminho_conf)
+
     criar_arquivo(caminho_conf, "tempo=60\nqtd=5\n#mac_gateway=\n#ip_gateway=\nblock_arp_grat=true\nemail=")
+    
     obter_config(caminho_conf)
 
 obter_config(caminho_conf)
@@ -171,7 +205,6 @@ class Email:
 # Classe das combinações de endereços IP/MAC
 # Guarda o IP, MAC e quantidade de pacotes detectados com essa combinação de IP e MAC (ambos sendo os de origem)
 class CombEnderecos:
-  
   def __init__(self,ip, mac):
     self.ip = ip
     self.mac = mac
@@ -210,7 +243,6 @@ def enviar_email(assunto, conteudo):
   mensagem = 'Subject: {}\n\n{}'.format(assunto,conteudo).encode("utf-8")
 
   # Enviando o email
-  
   server.sendmail(email_origem, email_origem, mensagem)
   
 
@@ -230,7 +262,7 @@ def analisa_pacote(ip, mac):
     with open(caminho_log, "a") as arq:
       # Registrando ataque no log e adicionando um email para ser enviado
 
-      arq.write("MAC diferente do configurado dizendo ter o ip do Gateway ({}) detectado: de {} (original) para {}\n".format(ip, mac_gateway, mac))
+      #arq.write("MAC diferente do configurado dizendo ter o ip do Gateway ({}) detectado: de {} (original) para {}\n".format(ip, mac_gateway, mac))
       emails_a_enviar.append(Email(ip, mac, "spoof_gateway"))
 
   # Vendo se pacotes com esses mesmos IP e MAC já foram encontrados. Caso sim, Adiciona a contagem de vezes encontradas (qtd_ocorr). Caso contrário, cria um novo objeto e seta sua contagem pra 1 
@@ -281,6 +313,10 @@ def main():
     if ja_enviado == False:
       emails_enviados.append(email)
       enviar_email("Notificação do ArpInspect","Um MAC diferente do configurado dizendo ter o ip do Gateway ({}) foi detectado em um de seus hosts({}): de {} (original) para {}.\n\n O MAC em questão não foi bloqueado, pois pode se tratar de uma mudança legítima.".format(email.ip, os.uname()[1], mac_gateway, email.mac))
+
+      with open(caminho_log, "a") as arq:
+        arq.write("Ataque Detectado (MAC diferente daquele do gateway cadastrado afirmando ter o IP do gateway): {} {} {}\n".format(i.ip,i.mac, i.data_e_hora))
+
 
 
 # Testando se o arquivo de log existe, e criando ele caso não exista
