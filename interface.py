@@ -14,7 +14,7 @@
 # Edclaudio: edclaudio.santos@academico.ifpb.edu.br
 
 import subprocess
-
+#TODO: LIDAR COM HASHTAGS NO COMEÇO DAS LINHAS DE CONFIGURAÇÃO
 caminho_senha = "/etc/arpinspect/passwd"
 caminho_conf = "/etc/arpinspect/conf"
 caminho_log = "/var/log/arpinspect"
@@ -86,4 +86,3 @@ while True:
 
   else:
     break
-
