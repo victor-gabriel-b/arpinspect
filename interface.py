@@ -30,6 +30,7 @@ def rodar(comando):
   i = 0
   while i<len(linhas):
     if "Gtk-WARNING" in linhas[i]:
+        print(linhas[i])
         del linhas[i]
     i += 1
 
