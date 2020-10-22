@@ -27,7 +27,7 @@ def rodar(comando):
   linhas = saida.stdout.read().decode("utf-8").split("\n")
   
   i = 0
-  while i<=len(linhas):
+  while i<len(linhas):
     if "Gtk-WARNING" in linhas[i]:
         del linhas[i]
     i += 1
