@@ -33,7 +33,7 @@ def rodar(comando):
         del linhas[i]
     i += 1
 
-  return saida.stdout.read().decode("utf-8").split("\n")[1]
+  return saida.stdout.read().decode("utf-8").split("\n")[0]
 
 
 while True:
