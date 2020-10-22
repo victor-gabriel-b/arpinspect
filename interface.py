@@ -26,11 +26,9 @@ def rodar(comando):
            
   linhas = saida.stdout.read().decode("utf-8").split("\n")
   
-  print(linhas)
   i = 0
   while i<len(linhas):
     if "Gtk-WARNING" in linhas[i]:
-        print(linhas[i])
         del linhas[i]
     i += 1
 
@@ -85,17 +83,16 @@ while True:
       --add-password=Senha                 \
       --add-password='Confirme a senha'    \\")
     
-    if senha
+    if senha != "":
+        senha = senha.split("|")
 
-    senha = senha.split("|")
+        if senha[0]!=senha[1]:
+          rodar('zenity --info --text "As senhas não batem, OTÁRIO."')
 
-    if senha[0]!=senha[1]:
-      rodar('zenity --info --text "As senhas não batem, OTÁRIO."')
-
-    else:
-      # Escrevendo a senha no arquivo
-      with open(caminho_senha, "w") as arq:
-        arq.write(senha[0])
+        else:
+          # Escrevendo a senha no arquivo
+          with open(caminho_senha, "w") as arq:
+            arq.write(senha[0])
     
 
   else:
