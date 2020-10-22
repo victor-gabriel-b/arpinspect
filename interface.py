@@ -26,11 +26,9 @@ def rodar(comando):
            
   linhas = saida.stdout.read().decode("utf-8").split("\n")
   
-  print(linhas)
   i = 0
   while i<len(linhas):
     if "Gtk-WARNING" in linhas[i]:
-        print(linhas[i])
         del linhas[i]
     i += 1
 
@@ -59,22 +57,23 @@ while True:
       --add-entry "Valor da configuração" --add-list="Valor e nome da configuração"    \
       --column-values "Config|Valor"               \
       --list-values="{}" --show-header'.format(str_valores)) 
+      
+    if config_alterada != "":   
+        config_alterada = config_alterada.split("\t")[0]	
+        config_alterada = config_alterada.split("|")
 
-    config_alterada = config_alterada.split("\t")[0]	
-    config_alterada = config_alterada.split("|")
+        # Alterando a configuração na lista		
+        for i in range(len(configs)):
+          if configs[i].split("=")[0].replace("\n","").replace("\t","") == config_alterada[1].replace("\n","").replace("\t",""):
+            configs[i] = "{}={}\n".format(config_alterada[1].replace("\t",""), config_alterada[0])
+            break	    
 
-    # Alterando a configuração na lista		
-    for i in range(len(configs)):
-      if configs[i].split("=")[0].replace("\n","").replace("\t","") == config_alterada[1].replace("\n","").replace("\t",""):
-        configs[i] = "{}={}\n".format(config_alterada[1].replace("\t",""), config_alterada[0])
-        break	    
-
-    # Escrevendo as novas configurações no arquivo
-    with open(caminho_conf, "w") as arq:
-      arq.writelines(configs)
-        
-      #Config 1 |10|Config 2    |20\
-      #|Config 3   |30 |
+        # Escrevendo as novas configurações no arquivo
+        with open(caminho_conf, "w") as arq:
+          arq.writelines(configs)
+            
+          #Config 1 |10|Config 2    |20\
+          #|Config 3   |30 |
 
 
   elif tela_escolhida == "Editar Senha":
@@ -83,16 +82,17 @@ while True:
       --text='Informe sua senha'       \
       --add-password=Senha                 \
       --add-password='Confirme a senha'    \\")
+    
+    if senha != "":
+        senha = senha.split("|")
 
-    senha = senha.split("|")
+        if senha[0]!=senha[1]:
+          rodar('zenity --info --text "As senhas não batem, OTÁRIO."')
 
-    if senha[0]!=senha[1]:
-      rodar('zenity --info --text "As senhas não batem, OTÁRIO."')
-
-    else:
-      # Escrevendo a senha no arquivo
-      with open(caminho_senha, "w") as arq:
-        arq.write(senha[0])
+        else:
+          # Escrevendo a senha no arquivo
+          with open(caminho_senha, "w") as arq:
+            arq.write(senha[0])
     
 
   else:
