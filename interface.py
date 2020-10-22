@@ -23,7 +23,8 @@ def rodar(comando):
   saida = subprocess.Popen(comando, shell=True, 
            stdout=subprocess.PIPE, 
            stderr=subprocess.STDOUT)
-  return saida.stdout.read().decode("utf-8").split("\n")[1]
+           
+  return saida.stdout.read().decode("utf-8").split("\n")[-1]
 
 
 while True:
