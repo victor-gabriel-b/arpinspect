@@ -59,22 +59,23 @@ while True:
       --add-entry "Valor da configuração" --add-list="Valor e nome da configuração"    \
       --column-values "Config|Valor"               \
       --list-values="{}" --show-header'.format(str_valores)) 
+      
+    if config_alterada != "":   
+        config_alterada = config_alterada.split("\t")[0]	
+        config_alterada = config_alterada.split("|")
 
-    config_alterada = config_alterada.split("\t")[0]	
-    config_alterada = config_alterada.split("|")
+        # Alterando a configuração na lista		
+        for i in range(len(configs)):
+          if configs[i].split("=")[0].replace("\n","").replace("\t","") == config_alterada[1].replace("\n","").replace("\t",""):
+            configs[i] = "{}={}\n".format(config_alterada[1].replace("\t",""), config_alterada[0])
+            break	    
 
-    # Alterando a configuração na lista		
-    for i in range(len(configs)):
-      if configs[i].split("=")[0].replace("\n","").replace("\t","") == config_alterada[1].replace("\n","").replace("\t",""):
-        configs[i] = "{}={}\n".format(config_alterada[1].replace("\t",""), config_alterada[0])
-        break	    
-
-    # Escrevendo as novas configurações no arquivo
-    with open(caminho_conf, "w") as arq:
-      arq.writelines(configs)
-        
-      #Config 1 |10|Config 2    |20\
-      #|Config 3   |30 |
+        # Escrevendo as novas configurações no arquivo
+        with open(caminho_conf, "w") as arq:
+          arq.writelines(configs)
+            
+          #Config 1 |10|Config 2    |20\
+          #|Config 3   |30 |
 
 
   elif tela_escolhida == "Editar Senha":
@@ -83,6 +84,8 @@ while True:
       --text='Informe sua senha'       \
       --add-password=Senha                 \
       --add-password='Confirme a senha'    \\")
+    
+    if senha
 
     senha = senha.split("|")
 
