@@ -24,7 +24,15 @@ def rodar(comando):
            stdout=subprocess.PIPE, 
            stderr=subprocess.STDOUT)
            
-  return saida.stdout.read().decode("utf-8").split("\n")[-1]
+  linhas = saida.stdout.read().decode("utf-8").split("\n")
+  
+  i = 0
+  while i<=len(linhas):
+    if "Gtk-WARNING" in linhas[i]:
+        del linhas[i]
+    i += 1
+    
+  return saida.stdout.read().decode("utf-8").split("\n")[0]
 
 
 while True:
