@@ -16,13 +16,13 @@
 
 import sys
 import os
-from geral import escrever_no_log
-arg = str(sys.argv[0])
+from geral import escrever_no_log, caminho_kill
+arg = str(sys.argv[1])
 
 if arg == "--start":
   import main
 
-elif arg == "--stop":
+elif arg == "--stop-forced":
   with open("/etc/arpinspect/pid", "r") as arq:
     pid = arq.read()
     if pid != "":
@@ -35,3 +35,7 @@ elif arg == "--stop":
         os.system("kill {}".format(pid))
       except:
         escrever_no_log("Erro detectado na hora de fechar o programa. Verificar se o ID do processo está sendo inserido corretamente (aos desenvolvedores).")
+
+elif arg == "--stop":
+  with open(caminho_kill, "w") as arq:
+    arq.write("1")
