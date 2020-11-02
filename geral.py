@@ -18,8 +18,11 @@
 
 import datetime
 
+global caminho_kill
 global caminho_log
 caminho_log = "/var/log/arpinspect"
+caminho_kill = "/etc/arpinspect/kill"
+
 # Escreve uma string no arquivo de log
 def escrever_no_log(string):
   global caminho_log
