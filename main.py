@@ -49,7 +49,7 @@ caminho_kill = "/etc/arpinspect/kill"
 caminho_pid = "/etc/arpinspect/pid"
 
 with open(caminho_pid, "w") as arq:
-  arq.write(str(os.getpid())
+  arq.write(str(os.getpid()))
 
 global configs_padrao
 configs_padrao = {
