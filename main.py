@@ -29,8 +29,6 @@ import datetime
 
 global caminho_kill
 global caminho_log
-caminho_log = "/var/log/arpinspect"
-caminho_kill = "/etc/arpinspect/kill"
 
 # Escreve uma string no arquivo de log
 def escrever_no_log(string):
@@ -49,7 +47,6 @@ emails_a_enviar = []
 global senha
 
 global caminho_conf
-global caminho_log
 global caminho_senha
 global caminho_pid
 caminho_senha = "/etc/arpinspect/passwd"
