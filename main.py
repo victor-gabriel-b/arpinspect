@@ -54,6 +54,8 @@ caminho_conf = "/etc/arpinspect/conf"
 # O caminho_log e caminho_kill estão definidos em geral (onde a função de escrever_no_log está)
 caminho_kill = "/etc/arpinspect/kill"
 caminho_pid = "/etc/arpinspect/pid"
+caminho_log = "/var/log/arpinspect"
+caminho_kill = "/etc/arpinspect/kill"
 
 with open(caminho_kill, "w") as arq:
   arq.write("0")
