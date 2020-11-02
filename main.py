@@ -27,7 +27,7 @@ import smtplib
 import ssl
 import datetime
 
-from geral import escrever_no_log
+from geral import escrever_no_log, caminho_log, caminho_kill
 
 global combs
 combs = []  # Lista das combinações de endereços
@@ -40,11 +40,10 @@ global senha
 global caminho_conf
 global caminho_log
 global caminho_senha
-global caminho_kill
 global caminho_pid
 caminho_senha = "/etc/arpinspect/passwd"
 caminho_conf = "/etc/arpinspect/conf"
-# O caminho_log é definido em geral (onde a função de escrever_no_log está)
+# O caminho_log e caminho_kill estão definidos em geral (onde a função de escrever_no_log está)
 caminho_kill = "/etc/arpinspect/kill"
 caminho_pid = "/etc/arpinspect/pid"
 
