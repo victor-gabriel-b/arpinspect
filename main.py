@@ -47,6 +47,9 @@ caminho_conf = "/etc/arpinspect/conf"
 caminho_kill = "/etc/arpinspect/kill"
 caminho_pid = "/etc/arpinspect/pid"
 
+with open(caminho_kill, "w") as arq:
+  arq.write("0")
+  
 with open(caminho_pid, "w") as arq:
   arq.write(str(os.getpid()))
 
