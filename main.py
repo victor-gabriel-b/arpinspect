@@ -394,7 +394,7 @@ with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.create_default_context(
           with open(caminho_kill, "w") as arq:
             arq.write("0")
           with open(caminho_pid, "w") as arq:
-            arq.write(os.getpid()
+            arq.write("")
           break
 
         else:
