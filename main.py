@@ -49,7 +49,7 @@ caminho_kill = "/etc/arpinspect/kill"
 caminho_pid = "/etc/arpinspect/pid"
 
 with open(caminho_pid, "w") as arq:
-  arq.write(os.getpid())
+  arq.write(str(os.getpid())
 
 global configs_padrao
 configs_padrao = {
@@ -408,3 +408,7 @@ with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.create_default_context(
     emails_a_enviar = []
 
     main()
+
+
+
+
