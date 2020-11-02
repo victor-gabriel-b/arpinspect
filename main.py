@@ -345,8 +345,7 @@ def main():
       emails_enviados.append(email)
       enviar_email("Notificação do ArpInspect","Um MAC diferente do configurado dizendo ter o ip do Gateway ({}) foi detectado em um de seus hosts({}): de {} (original) para {}.\n\n O MAC em questão não foi bloqueado, pois pode se tratar de uma mudança legítima.".format(email.ip, os.uname()[1], mac_gateway, email.mac)) # *** add tempo aqui
 
-      with open(caminho_log, "a") as arq:
-        arq.write("Ataque Detectado (MAC diferente daquele do gateway cadastrado afirmando ter o IP do gateway): {} {} {}\n".format(i.ip,i.mac, i.data_e_hora))
+      escrever_no_log("Ataque Detectado (MAC diferente daquele do gateway cadastrado afirmando ter o IP do gateway): {} {}\n".format(i.ip,i.mac))
 
 # Testando se o arquivo de log existe, e criando ele caso não exista
 try:
