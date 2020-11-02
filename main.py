@@ -27,7 +27,18 @@ import smtplib
 import ssl
 import datetime
 
-from geral import escrever_no_log, caminho_log, caminho_kill
+global caminho_kill
+global caminho_log
+caminho_log = "/var/log/arpinspect"
+caminho_kill = "/etc/arpinspect/kill"
+
+# Escreve uma string no arquivo de log
+def escrever_no_log(string):
+  print("Abriu a função de log")
+  global caminho_log
+  with open(caminho_log, "a") as arq:
+    arq.write("[{}]:{}".format(datetime.datetime.now(), string))
+  print("log gravado")
 
 global combs
 combs = []  # Lista das combinações de endereços
