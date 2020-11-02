@@ -25,6 +25,8 @@ caminho_kill = "/etc/arpinspect/kill"
 
 # Escreve uma string no arquivo de log
 def escrever_no_log(string):
+  print("Abriu a função de log")
   global caminho_log
   with open(caminho_log, "a") as arq:
     arq.write("[{}]:{}".format(datetime.datetime.now(), string))
+  print("log gravado")
