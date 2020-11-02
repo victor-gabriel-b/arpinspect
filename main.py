@@ -27,6 +27,8 @@ import smtplib
 import ssl
 import datetime
 
+from geral import escrever_no_log
+
 global combs
 combs = []  # Lista das combinações de endereços
 
@@ -38,9 +40,16 @@ global senha
 global caminho_conf
 global caminho_log
 global caminho_senha
+global caminho_kill
+global caminho_pid
 caminho_senha = "/etc/arpinspect/passwd"
 caminho_conf = "/etc/arpinspect/conf"
-caminho_log = "/var/log/arpinspect"
+# O caminho_log é definido em geral (onde a função de escrever_no_log está)
+caminho_kill = "/etc/arpinspect/kill"
+caminho_pid = "/etc/arpinspect/pid"
+
+with open(caminho_pid, "w") as arq:
+  arq.write(os.getpid())
 
 global configs_padrao
 configs_padrao = {
@@ -52,9 +61,12 @@ configs_padrao = {
   "email":"email="
 }
 
+
+    
+
 # Cria um arquivo no caminho especificado, criando também todos o diretorios necessários
 def criar_arquivo(caminho, conteudo=""):
-  # Quando for botar pra windows vai dar errado *-*
+  # Quando for botar pra windows vai dar errado *_*
   dirs = caminho.split("/")[:-1]
   dirs_string = ""
   for i in dirs:
@@ -101,13 +113,14 @@ def obter_config(caminho_conf):
 
   tempo_ciclo = 60
   qtd_pacotes = 5
-  # TODO
+
   # Tenta obter as configurações, caso dê erro, cria o arquivo de configuração (caso não exista) com as configurações padrão já dentro
+
   try:
     with open(caminho_conf, "r") as conf:
       cfg_lista = conf.readlines()
 
-      # Itera pelas linhas do arquivo de configuração, tomando as ações necessárias para cada configurar
+      # Altera pelas linhas do arquivo de configuração, tomando as ações necessárias para cada configurar
 
       for i in cfg_lista:
         # Esse if exclui as linhas que começam com #
@@ -116,7 +129,7 @@ def obter_config(caminho_conf):
           valor.replace("\n", "")
           
           if nome == "tempo":
-            config_atual = "block_arp_grat"
+            config_atual = "tempo"
             tempo_ciclo = int(valor)
           elif nome == "qtd":
             config_atual = "qtd"
@@ -124,10 +137,15 @@ def obter_config(caminho_conf):
 
 
           elif nome == "ip_gateway":
-            config_atual = "block_arp_grat"
+            config_atual = "ip_gateway"
             # Ver se tem uma configuração manual válida, e usar a padrão (olha o que o sistema diz) caso não tenha
+
+            if valor == "auto":
+              # Setar a configuração padrão
+              ip_gateway = netifaces.gateways()['default'][netifaces.AF_INET][0]
+
             partes = valor.split(".")
-            
+
             certo = True
             for i in partes:
               if i.isnumeric():
@@ -147,8 +165,13 @@ def obter_config(caminho_conf):
 
 
           elif nome == "mac_gateway":
-            config_atual = "block_arp_grat"
+            config_atual = "mac_gateway"
             # Ver se tem uma configuração manual válida, e usar a padrão (olha o que o sistema diz) caso não tenha
+
+            if valor != "auto":
+              # Setar a configuração padrão
+              mac_gateway = getmac.get_mac_address(ip=ip_gateway, network_request=True)
+          
             partes = valor.split(":")
             qtd_letras = 0
             certo = True
@@ -156,7 +179,7 @@ def obter_config(caminho_conf):
             for i in partes:
               for j in i:
                 qtd_letras += 1              
-                if j =="A" or j=="B" or j=="C" or j=="D" or j== "E" or j== "F":
+                if j == "A" or j == "B" or j == "C" or j == "D" or j == "E" or j == "F":
                   continue
                 elif int(j) >=0 and int(j)<=9:
                   continue
@@ -182,13 +205,15 @@ def obter_config(caminho_conf):
             email_origem = valor.replace("\n", "")
  
   except:
-    # Criar o arquivo com as configurações padrão, e então acessar novamente
-
-    with open(caminho_conf, "r") as conf:
-      atualizar_arquivo(conf.readlines(), [config_atual, configs_padrao[config_atual]], caminho_conf)
-
-    criar_arquivo(caminho_conf, "tempo=60\nqtd=5\n#mac_gateway=\n#ip_gateway=\nblock_arp_grat=true\nemail=")
-    
+    try:
+      # Tentar atualizar apenas a configuração que deu errado e chamar a função novamente
+      with open(caminho_conf, "r") as conf:
+        atualizar_arquivo(conf.readlines(), [config_atual, configs_padrao[config_atual]], caminho_conf)
+        
+    except:
+      # Criar o arquivo com as configurações padrão, e então acessar novamente
+      criar_arquivo(caminho_conf, "#Tempo de cada ciclo de execução\ntempo=60\n#Quantidade de pacotes por ciclo de execução que é considerada como um ataque\nqtd=5\n#Configura o mac do gateway. Você pode deixar como auto pra obter autromaticamente. (É fortemente recomendado setar manualmente essa configuração)\nmac_gateway=auto\n#Seta de forma fixa o ip do gateway. Você pode deixar como auto pra obter automaticamente.\nip_gateway=auto\n#Ativa ou desativa o bloqueio de ARP Replies gratuitos (true ou false).\nblock_arp_grat=true\n#Email que vai ser usado pra enviar notificações\nemail=")
+      
     obter_config(caminho_conf)
 
 obter_config(caminho_conf)
@@ -204,16 +229,19 @@ class Email:
 
 # Classe das combinações de endereços IP/MAC
 # Guarda o IP, MAC e quantidade de pacotes detectados com essa combinação de IP e MAC (ambos sendo os de origem)
+
 class CombEnderecos:
   def __init__(self,ip, mac):
     self.ip = ip
     self.mac = mac
 
     # Contador da quantidade de pacotes capturados com esse IP e MAC
+
     self.qtd_ocorr = 0
 
 # Função para tratamento inicial do pacote
 # É chamada assim que um pacote é recebido, servindo pra verificar se o pacote deve ser analisado e repassar para a função analisa_pacote caso seja
+
 def trata_pacote(pacote):
   mac = pacote.src
 
@@ -246,11 +274,10 @@ def enviar_email(assunto, conteudo):
   server.sendmail(email_origem, email_origem, mensagem)
   
 
-
-
 # Verifica cada combinacao ip/mac, vendo se é igual à do pacote recebido
 # Caso seja, aumenta o contador da combinação
 # Caso contrário, cria uma nova combinação
+
 def analisa_pacote(ip, mac):
   global combs
   global ip_gateway
@@ -258,8 +285,10 @@ def analisa_pacote(ip, mac):
   global emails_a_enviar
 
   # Verificando se o IP de origem do pacote é o mesmo do gateway, porém com um MAC diferente do configurado associado à ele
+
   if ip == ip_gateway and mac != mac_gateway:
     with open(caminho_log, "a") as arq:
+
       # Registrando ataque no log e adicionando um email para ser enviado
 
       #arq.write("MAC diferente do configurado dizendo ter o ip do Gateway ({}) detectado: de {} (original) para {}\n".format(ip, mac_gateway, mac))
@@ -276,7 +305,7 @@ def analisa_pacote(ip, mac):
   nova_comb.qtd_ocorr += 1
   combs.append(nova_comb)
   
-
+ # Criando variaveis globais
 def main():
   global emails_a_enviar
   global combs
@@ -299,9 +328,9 @@ def main():
         # Pode ser válido verificar se foi realmente bloqueado mesmo antes de mandar ***
         enviar_email("Notificação do ArpInspect", "Ataque Detectado (número excessivo de pacotes ARP Reply): {} {}\n\nO host mencionado foi bloqueado de entrar na tabela ARP através do IPtables".format(i.ip,i.mac))
 
-
-  emails_enviados = []
   # Enviar os emails sem repetir o mesmo várias vezes, pode ter outra forma mais eficiente ***
+  emails_enviados = []
+
   for email in emails_a_enviar:
     # Adicionar verificação de tipo caso necessário aqui
     ja_enviado = False
@@ -312,12 +341,10 @@ def main():
       
     if ja_enviado == False:
       emails_enviados.append(email)
-      enviar_email("Notificação do ArpInspect","Um MAC diferente do configurado dizendo ter o ip do Gateway ({}) foi detectado em um de seus hosts({}): de {} (original) para {}.\n\n O MAC em questão não foi bloqueado, pois pode se tratar de uma mudança legítima.".format(email.ip, os.uname()[1], mac_gateway, email.mac))
+      enviar_email("Notificação do ArpInspect","Um MAC diferente do configurado dizendo ter o ip do Gateway ({}) foi detectado em um de seus hosts({}): de {} (original) para {}.\n\n O MAC em questão não foi bloqueado, pois pode se tratar de uma mudança legítima.".format(email.ip, os.uname()[1], mac_gateway, email.mac)) # *** add tempo aqui
 
       with open(caminho_log, "a") as arq:
-        arq.write("Ataque Detectado (MAC diferente daquele do gateway cadastrado afirmando ter o IP do gateway): {} {} {}\n".format(email.ip, email.mac, email.data_e_hora))
-
-
+        arq.write("Ataque Detectado (MAC diferente daquele do gateway cadastrado afirmando ter o IP do gateway): {} {} {}\n".format(i.ip,i.mac, i.data_e_hora))
 
 # Testando se o arquivo de log existe, e criando ele caso não exista
 try:
@@ -352,11 +379,32 @@ with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.create_default_context(
   # Loop principal de execução do programa
   # Cada iteração é considerada um ciclo de execução do programa
   while True:
+    # Verificação de se o programa deve fechar neste fim de ciclo
+    # Checa o arquivo do caminho_kill, que é alterado pelo gerenciador (o programa que inicia ou fecha o próprio arpinspect)
+    with open(caminho_kill, "r") as arq:
+      try:
+        kill = int(arq.read())
+        
+        if kill == 0:
+          pass
+
+        elif kill == 1:
+          # Finalização do programa
+          escrever_no_log("FIM DA EXECUÇÃO")
+          with open(caminho_kill, "w") as arq:
+            arq.write("0")
+          with open(caminho_pid, "w") as arq:
+            arq.write(os.getpid()
+          break
+
+        else:
+          raise ValueError
+
+      except:
+        escrever_no_log("Valor do sinal de kill inválido. Continuando a execução.")
+      
+
     combs = []
     emails_a_enviar = []
 
     main()
-
-
-
-
