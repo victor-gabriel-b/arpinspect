@@ -275,15 +275,18 @@ def enviar_email(assunto, conteudo):
   global email_origem
   
   if email_origem == "":
+    print("ihh ta sem email")
     escrever_no_log("Nenhum email foi inserido. Nada será enviado.\n")
   
 
   # Formatando a mensagem
   mensagem = 'Subject: {}\n\n{}'.format(assunto,conteudo).encode("utf-8")
+  print("Mensagem formatada")
 
+  print("enviando email")
   # Enviando o email
   server.sendmail(email_origem, email_origem, mensagem)
-  
+  print("email enviado")
 
 # Verifica cada combinacao ip/mac, vendo se é igual à do pacote recebido
 # Caso seja, aumenta o contador da combinação
