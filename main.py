@@ -270,13 +270,12 @@ def trata_pacote(pacote):
 
 # Função pra enviar um email
 def enviar_email(assunto, conteudo):
+  print("entrou na função de enviar email")
   global senha
   global email_origem
   
   if email_origem == "":
-    with open(caminho_log, "a") as arq:
-      arq.write("Nenhum email foi inserido. Nada será enviado.\n")
-      return
+    escrever_no_log("Nenhum email foi inserido. Nada será enviado.\n")
   
 
   # Formatando a mensagem
@@ -334,11 +333,10 @@ def main():
     if i.qtd_ocorr >= qtd_pacotes:
       # Ao detectar um ataque, o programa roda um comando de shell para criar uma regra no Iptables, definindo que todos os pacotes com aquele ip e mac devem ser descartados
       os.system("iptables -A INPUT -s {} -m mac --mac-source {} -j DROP".format(i.ip,i.mac))
-      with open(caminho_log,"a") as arq:
-        arq.write("Ataque Detectado (número excessivo de pacotes ARP Reply): {} {}\n".format(i.ip,i.mac))
+      escrever_no_log("Ataque Detectado (número excessivo de pacotes ARP Reply): {} {}\n".format(i.ip,i.mac))
 
-        # Pode ser válido verificar se foi realmente bloqueado mesmo antes de mandar ***
-        enviar_email("Notificação do ArpInspect", "Ataque Detectado (número excessivo de pacotes ARP Reply): {} {}\n\nO host mencionado foi bloqueado de entrar na tabela ARP através do IPtables".format(i.ip,i.mac))
+      # Pode ser válido verificar se foi realmente bloqueado mesmo antes de mandar ***
+      enviar_email("Notificação do ArpInspect", "Ataque Detectado (número excessivo de pacotes ARP Reply): {} {}\n\nO host mencionado foi bloqueado de entrar na tabela ARP através do IPtables".format(i.ip,i.mac))
 
   # Enviar os emails sem repetir o mesmo várias vezes, pode ter outra forma mais eficiente ***
   emails_enviados = []
@@ -352,10 +350,12 @@ def main():
         break
       
     if ja_enviado == False:
+      print("ataque do gateway detectado")
       emails_enviados.append(email)
       enviar_email("Notificação do ArpInspect","Um MAC diferente do configurado dizendo ter o ip do Gateway ({}) foi detectado em um de seus hosts({}): de {} (original) para {}.\n\n O MAC em questão não foi bloqueado, pois pode se tratar de uma mudança legítima.".format(email.ip, os.uname()[1], mac_gateway, email.mac)) # *** add tempo aqui
-
+      print("email enviado, em teoria")
       escrever_no_log("Ataque Detectado (MAC diferente daquele do gateway cadastrado afirmando ter o IP do gateway): {} {}\n".format(i.ip,i.mac))
+      print("Entrada no log feita, em teoria")
 
 # Testando se o arquivo de log existe, e criando ele caso não exista
 try:
@@ -366,7 +366,7 @@ except:
 
 # Preparando pra envio de emails dentro do programa
 with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.create_default_context()) as server:
-
+  global server
   # Obtendo a senha para o uso do email
   try:
     with open(caminho_senha, "r") as arq:
@@ -375,8 +375,7 @@ with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.create_default_context(
   #except IOError
   except:
     criar_arquivo(caminho_senha)
-    with open(caminho_log, "w") as arq:
-      arq.write("Arquivo de senha não encontrado. Criando arquivo vazio em {}\n".format(caminho_senha))
+    escrever_no_log("Arquivo de senha não encontrado. Criando arquivo vazio em {}\n".format(caminho_senha))
       
   # Tentando logar no email
   try:
