@@ -29,12 +29,14 @@ elif arg == "--stop-forced":
       try:
         pid = int(pid)
       except:
+        pass
         #escrever_no_log("Valor de pid inválido. O programa não será fechada.")
 
       try:
         os.system("kill {}".format(pid))
       except:
         #escrever_no_log("Erro detectado na hora de fechar o programa. Verificar se o ID do processo está sendo inserido corretamente (aos desenvolvedores).")
+        pass
 
 elif arg == "--stop":
   with open(caminho_kill, "w") as arq:
