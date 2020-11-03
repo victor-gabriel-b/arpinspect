@@ -16,7 +16,7 @@
 
 import sys
 import os
-from geral import escrever_no_log, caminho_kill
+#from geral import escrever_no_log, caminho_kill
 arg = str(sys.argv[1])
 
 if arg == "--start":
@@ -29,12 +29,12 @@ elif arg == "--stop-forced":
       try:
         pid = int(pid)
       except:
-        escrever_no_log("Valor de pid inválido. O programa não será fechada.")
+        #escrever_no_log("Valor de pid inválido. O programa não será fechada.")
 
       try:
         os.system("kill {}".format(pid))
       except:
-        escrever_no_log("Erro detectado na hora de fechar o programa. Verificar se o ID do processo está sendo inserido corretamente (aos desenvolvedores).")
+        #escrever_no_log("Erro detectado na hora de fechar o programa. Verificar se o ID do processo está sendo inserido corretamente (aos desenvolvedores).")
 
 elif arg == "--stop":
   with open(caminho_kill, "w") as arq:
