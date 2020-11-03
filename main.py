@@ -364,9 +364,9 @@ try:
 except:
   criar_arquivo(caminho_log,"COMEÇO DO LOG\n")
 
+global server
 # Preparando pra envio de emails dentro do programa
 with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.create_default_context()) as server:
-  global server
   # Obtendo a senha para o uso do email
   try:
     with open(caminho_senha, "r") as arq:
