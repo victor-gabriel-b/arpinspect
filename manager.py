@@ -17,6 +17,8 @@
 
 import datetime
 import os
+import sys
+import argparse
 from geral import escrever_no_log, criar_arquivo
 
 global caminho_kill
@@ -24,11 +26,6 @@ global caminho_log
 caminho_log = "/var/log/arpinspect"
 caminho_kill = "/etc/arpinspect/kill"
 DIR_INSTALACAO = os.path.dirname(os.path.abspath(__file__))
-
-import sys
-import os
-import argparse
-#from geral import escrever_no_log, caminho_kill
 
 parser = argparse.ArgumentParser()
 parser.add_argument("funcionalidade", help=

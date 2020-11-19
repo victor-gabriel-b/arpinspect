@@ -24,7 +24,7 @@ global caminho_kill
 global caminho_log
 global caminho_conf
 caminho_log = "/var/log/arpinspect"
-caminho_kill = "/etc/arpinspect/kill"]
+caminho_kill = "/etc/arpinspect/kill"
 caminho_conf = "/etc/arpinspect/conf"
 
 # Escreve uma string no arquivo de log
