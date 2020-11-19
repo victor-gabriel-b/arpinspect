@@ -15,11 +15,43 @@
 # Victor: victor.reinaldo@academico.ifpb.edu.br
 # Edclaudio: edclaudio.santos@academico.ifpb.edu.br
 
+import datetime
+import os
+
+global caminho_kill
+global caminho_log
+caminho_log = "/var/log/arpinspect"
+caminho_kill = "/etc/arpinspect/kill"
+
+# Escreve uma string no arquivo de log
+def escrever_no_log(string):
+  print("Abriu a função de log")
+  global caminho_log
+  with open(caminho_log, "a") as arq:
+    arq.write("[{}]:{}".format(datetime.datetime.now(), string))
+  print("log gravado")
+
+
+# Cria um arquivo no caminho especificado, criando também todos o diretorios necessários
+def criar_arquivo(caminho, conteudo=""):
+  # Quando for botar pra windows vai dar errado *_*
+  dirs = caminho.split("/")[:-1]
+  dirs_string = ""
+  for i in dirs:
+    dirs_string += i+"/"
+
+  if os.path.isdir(dirs_string) == False:
+    os.makedirs(dirs_string)  
+
+  with open(caminho,"w") as arq:
+    arq.write(conteudo)
+
+
 
 import sys
 import os
 import argparse
-from geral import escrever_no_log, caminho_kill
+#from geral import escrever_no_log, caminho_kill
 
 parser = argparse.ArgumentParser()
 parser.add_argument("funcionalidade", help="opções: start, stop, stop-forced, gui")
