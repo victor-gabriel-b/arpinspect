@@ -17,18 +17,15 @@
 
 import datetime
 import os
-from geral import escrever_no_log, criar_arquivo
+import sys
+import argparse
+from geral import escrever_no_log, criar_arquivo, tirar_arquivo
 
 global caminho_kill
 global caminho_log
 caminho_log = "/var/log/arpinspect"
 caminho_kill = "/etc/arpinspect/kill"
-DIR_INSTALACAO = os.path.dirname(os.path.abspath(__file__))
-
-import sys
-import os
-import argparse
-#from geral import escrever_no_log, caminho_kill
+DIR_INSTALACAO = tirar_arquivo(os.path.realpath(__file__))
 
 parser = argparse.ArgumentParser()
 parser.add_argument("funcionalidade", help=
@@ -38,7 +35,8 @@ Opções:
   stop (para o programa ao final do ciclo de execução), 
   stop-forced (mata o programa), 
   gui (acessa a interface de gerenciamento),
-  license (mostra a licença do programa)""")
+  license (mostra a licença do programa)
+  uninstall (abre a interface de desinstalação)""")
 args = parser.parse_args()
 arg = args.funcionalidade
 
@@ -67,5 +65,8 @@ elif arg == "gui":
   os.system("python3 {}/interface.py &".format(DIR_INSTALACAO))
 
 elif arg == "license":
-  with open("LICENSE", "r") as l:
-    print(l.read)
+  with open("{}/LICENSE".format(DIR_INSTALACAO), "r") as l:
+    print(l.read())
+
+elif arg == "uninstall":
+  import uninstaller
