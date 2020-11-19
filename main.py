@@ -26,9 +26,7 @@ import getmac
 import smtplib
 import ssl
 import datetime
-
-global caminho_kill
-global caminho_log
+from geral import criar_arquivo
 
 # Escreve uma string no arquivo de log
 def escrever_no_log(string):
@@ -49,10 +47,10 @@ global senha
 global caminho_conf
 global caminho_senha
 global caminho_pid
+global caminho_kill
+global caminho_log
 caminho_senha = "/etc/arpinspect/passwd"
 caminho_conf = "/etc/arpinspect/conf"
-# O caminho_log e caminho_kill estão definidos em geral (onde a função de escrever_no_log está)
-caminho_kill = "/etc/arpinspect/kill"
 caminho_pid = "/etc/arpinspect/pid"
 caminho_log = "/var/log/arpinspect"
 caminho_kill = "/etc/arpinspect/kill"
@@ -73,22 +71,6 @@ configs_padrao = {
   "email":"email="
 }
 
-
-    
-
-# Cria um arquivo no caminho especificado, criando também todos o diretorios necessários
-def criar_arquivo(caminho, conteudo=""):
-  # Quando for botar pra windows vai dar errado *_*
-  dirs = caminho.split("/")[:-1]
-  dirs_string = ""
-  for i in dirs:
-    dirs_string += i+"/"
-
-  if os.path.isdir(dirs_string) == False:
-    os.makedirs(dirs_string)
-
-  with open(caminho,"w") as arq:
-    arq.write(conteudo)
 
 # Atualiza o arquivo de configurações, alterando apenas uma linha
 def atualizar_arquivo(configs, config_alterada, caminho):

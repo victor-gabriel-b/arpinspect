@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # ArpInspect: Um programa de segurança de redes internas contra ataques ARP Spoof
 #Copyright (C) 2020  Victor Gabriel Batista Reinaldo, Edclaudio Santos de araújo
 
@@ -16,13 +18,18 @@
 
 import sys
 import os
+import argparse
 from geral import escrever_no_log, caminho_kill
-arg = str(sys.argv[1])
 
-if arg == "--start":
-  import main
+parser = argparse.ArgumentParser()
+parser.add_argument("funcionalidade", help="opções: start, stop, stop-forced, gui")
+args = parser.parse_args()
+arg = args.funcionalidade
 
-elif arg == "--stop-forced":
+if arg == "start":
+  os.system("python3 /opt/arpinspect/main.py &")
+
+elif arg == "stop-forced":
   with open("/etc/arpinspect/pid", "r") as arq:
     pid = arq.read()
     if pid != "":
@@ -36,7 +43,9 @@ elif arg == "--stop-forced":
       except:
         escrever_no_log("Erro detectado na hora de fechar o programa. Verificar se o ID do processo está sendo inserido corretamente (aos desenvolvedores).")
 
-
-elif arg == "--stop":
+elif arg == "stop":
   with open(caminho_kill, "w") as arq:
     arq.write("1")
+
+elif arg == "gui":
+  os.system("python3 /opt/arpinspect/interface.py &")

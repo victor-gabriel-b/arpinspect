@@ -87,7 +87,7 @@ while True:
         senha = senha.split("|")
 
         if senha[0]!=senha[1]:
-          rodar('zenity --info --text "As senhas não batem, OTÁRIO."')
+          rodar('zenity --info --text "As senhas não batem."')
 
         else:
           # Escrevendo a senha no arquivo
