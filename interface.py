@@ -13,26 +13,14 @@
 # Victor: victor.reinaldo@academico.ifpb.edu.br
 # Edclaudio: edclaudio.santos@academico.ifpb.edu.br
 
-import subprocess
+
 #TODO: LIDAR COM HASHTAGS NO COMEÇO DAS LINHAS DE CONFIGURAÇÃO
 caminho_senha = "/etc/arpinspect/passwd"
 caminho_conf = "/etc/arpinspect/conf"
 caminho_log = "/var/log/arpinspect"
 
-def rodar(comando):
-  saida = subprocess.Popen(comando, shell=True, 
-           stdout=subprocess.PIPE, 
-           stderr=subprocess.STDOUT)
-           
-  linhas = saida.stdout.read().decode("utf-8").split("\n")
-  
-  i = 0
-  while i<len(linhas):
-    if "Gtk-WARNING" in linhas[i]:
-        del linhas[i]
-    i += 1
 
-  return linhas[0]
+from geral import rodar, editar_config_gui
 
 
 while True:
@@ -43,37 +31,7 @@ while True:
     rodar("cat {} | zenity --text-info".format(caminho_log))
 
   elif tela_escolhida == "Editar Configurações":
-    # Lendo os valores do arquivo de configuração e formatando
-    with open(caminho_conf, "r") as arq:
-      configs = arq.readlines()
-      str_valores = ""
-      for i in range(len(configs)):
-        config = configs[i].split("=")
-        str_valores += "{}\t|{}|".format(config[0], config[1].replace("\n",""))
-   
-    # Mostrando a tela e obtendo input
-    config_alterada = rodar('zenity --forms                                   \
-      --text "Ver e editar configurações"  \
-      --add-entry "Valor da configuração" --add-list="Valor e nome da configuração"    \
-      --column-values "Config|Valor"               \
-      --list-values="{}" --show-header'.format(str_valores)) 
-      
-    if config_alterada != "":   
-        config_alterada = config_alterada.split("\t")[0]	
-        config_alterada = config_alterada.split("|")
-
-        # Alterando a configuração na lista		
-        for i in range(len(configs)):
-          if configs[i].split("=")[0].replace("\n","").replace("\t","") == config_alterada[1].replace("\n","").replace("\t",""):
-            configs[i] = "{}={}\n".format(config_alterada[1].replace("\t",""), config_alterada[0])
-            break	    
-
-        # Escrevendo as novas configurações no arquivo
-        with open(caminho_conf, "w") as arq:
-          arq.writelines(configs)
-            
-          #Config 1 |10|Config 2    |20\
-          #|Config 3   |30 |
+    editar_config_gui() # ver se isso funciona ***
 
 
   elif tela_escolhida == "Editar Senha":

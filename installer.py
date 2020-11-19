@@ -1,7 +1,36 @@
-DIR_INSTALACAO = "/opt/arpinspect"
+import os
+from geral import criar_arquivo, rodar, inicializar_config, editar_config_gui
+
+# Obtendo o diretório de instalação
+dir_instalacao = "/opt/arpinspect"
+dir_instalacao = rodar('zenity --file-selection --directory --title="Arpinspect - Selecione o diretório de instalação" --filename="/opt/arpinspect"')
+if dir_instalacao == "":
+  dir_instalacao = "/opt/arpinspect"
+
+DIR_CONFIG = "/etc/arpinspect"
 PATH = "/usr/bin"
 
-import os
+CAMINHO_CONF = "{}/conf".format(DIR_CONFIG)
+CAMINHO_SENHA = "{}/passwd".format(DIR_CONFIG)
+CAMINHO_LOG = "/var/log/arpinspect"
+CAMINHO_PID = "{}/pid".format(DIR_CONFIG)
+CAMINHO_KILL = "{}/kill".format(DIR_CONFIG)
+
+
+
+def definir_perms(arquivo, exec=False):
+  os.chown(arquivo, 0, 0)
+
+  os.system("chmod a-rwx {}".format(arquivo))
+  os.system("chmod u+rw {}".format(arquivo))
+  if exec:
+    os.system("chmod u+x {}".format(arquivo))
+
+# Cria um arquivo e muda suas permissões pra ser do root
+def criar_arquivo_perm(arquivo, exec=False):
+  criar_arquivo(arquivo)
+
+  definir_perms(arquivo, exec)
 
 def criar_diretorios(caminho):
   dirs = caminho.split("/")
@@ -12,12 +41,37 @@ def criar_diretorios(caminho):
   if os.path.isdir(dirs_string) == False:
     os.makedirs(dirs_string)  
 
-criar_diretorios(DIR_INSTALACAO)
-criar_diretorios(PATH)
+criar_diretorios(dir_instalacao)
 
 print("Instalando...")
-os.rename("main.py", "{}/main.py".format(DIR_INSTALACAO))
-os.rename("geral.py", "{}/geral.py".format(DIR_INSTALACAO))
-os.rename("interface.py", "{}/interface.py".format(DIR_INSTALACAO))
-os.rename("manager.py", "{}/arpinspect.py".format(PATH))
+os.rename("main.py", "{}/main.py".format(dir_instalacao))
+os.rename("geral.py", "{}/geral.py".format(dir_instalacao))
+os.rename("interface.py", "{}/interface.py".format(dir_instalacao))
+os.rename("manager.py", "{}/manager.py".format(dir_instalacao))
+os.rename("LICENSE", "{}/LICENSE".format(dir_instalacao))
+
+print("Definindo permissões...")
+definir_perms("{}/main.py".format(dir_instalacao), True)
+definir_perms("{}/geral.py".format(dir_instalacao), True)
+definir_perms("{}/interface.py".format(dir_instalacao), True)
+definir_perms("{}/manager.py".format(dir_instalacao), True)
+
+print("Inicializando arquivos de dados...")
+criar_arquivo_perm(CAMINHO_CONF)
+criar_arquivo_perm(CAMINHO_LOG)
+criar_arquivo_perm(CAMINHO_SENHA)
+criar_arquivo_perm(CAMINHO_KILL)
+criar_arquivo_perm(CAMINHO_PID)
+
+print("Criando link simbólico para o comando...")
+os.symlink("{}/manager.py".format(dir_instalacao), "{}/arpinspect".format(PATH))
+
+print("Obtendo configurações iniciais...")
+res = rodar('zenity --question --text="Deseja customizar as configurações iniciais?"')
+if res == "Sim":
+  print("OBTENDO INPUT")
+  inicializar_config()
+  editar_config_gui()
+
+
 print("Instalado!")
