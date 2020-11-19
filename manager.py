@@ -15,19 +15,35 @@
 # Victor: victor.reinaldo@academico.ifpb.edu.br
 # Edclaudio: edclaudio.santos@academico.ifpb.edu.br
 
+import datetime
+import os
+from geral import escrever_no_log, criar_arquivo
+
+global caminho_kill
+global caminho_log
+caminho_log = "/var/log/arpinspect"
+caminho_kill = "/etc/arpinspect/kill"
+DIR_INSTALACAO = os.path.dirname(os.path.abspath(__file__))
 
 import sys
 import os
 import argparse
-from geral import escrever_no_log, caminho_kill
+#from geral import escrever_no_log, caminho_kill
 
 parser = argparse.ArgumentParser()
-parser.add_argument("funcionalidade", help="opções: start, stop, stop-forced, gui")
+parser.add_argument("funcionalidade", help=
+"""Seleciona o que você quer que o arpinspect faça, ou o que você deseja acessar. 
+Opções: 
+  start (inicia o programa), 
+  stop (para o programa ao final do ciclo de execução), 
+  stop-forced (mata o programa), 
+  gui (acessa a interface de gerenciamento),
+  license (mostra a licença do programa)""")
 args = parser.parse_args()
 arg = args.funcionalidade
 
 if arg == "start":
-  os.system("python3 /opt/arpinspect/main.py &")
+  os.system("python3 {}/main.py &".format(DIR_INSTALACAO))
 
 elif arg == "stop-forced":
   with open("/etc/arpinspect/pid", "r") as arq:
@@ -48,4 +64,8 @@ elif arg == "stop":
     arq.write("1")
 
 elif arg == "gui":
-  os.system("python3 /opt/arpinspect/interface.py &")
+  os.system("python3 {}/interface.py &".format(DIR_INSTALACAO))
+
+elif arg == "license":
+  with open("LICENSE", "r") as l:
+    print(l.read)

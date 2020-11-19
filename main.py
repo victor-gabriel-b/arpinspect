@@ -26,15 +26,8 @@ import getmac
 import smtplib
 import ssl
 import datetime
-from geral import criar_arquivo
-
-# Escreve uma string no arquivo de log
-def escrever_no_log(string):
-  print("Abriu a função de log")
-  global caminho_log
-  with open(caminho_log, "a") as arq:
-    arq.write("[{}]:{}".format(datetime.datetime.now(), string))
-  print("log gravado")
+from geral import criar_arquivo, escrever_no_log, inicializar_config
+# *** testar o escrever no log
 
 global combs
 combs = []  # Lista das combinações de endereços
@@ -55,6 +48,7 @@ caminho_pid = "/etc/arpinspect/pid"
 caminho_log = "/var/log/arpinspect"
 caminho_kill = "/etc/arpinspect/kill"
 
+
 with open(caminho_kill, "w") as arq:
   arq.write("0")
   
@@ -65,10 +59,10 @@ global configs_padrao
 configs_padrao = {
   "tempo":"tempo=60",
   "qtd":"qtd=5",
-  "mac_gateway":"#mac_gateway=",
-  "ip_gateway":"#ip_gateway=",
+  "mac_gateway":"mac_gateway=auto",
+  "ip_gateway":"ip_gateway=auto",
   "block_arp_grat":"block_arp_grat=true",
-  "email":"email="
+  "email":"email=none"
 }
 
 
@@ -196,7 +190,8 @@ def obter_config(caminho_conf):
 
           elif nome == "email":
             config_atual = "email"
-            email_origem = valor.replace("\n", "")
+            if valor != "none":
+              email_origem = valor.replace("\n", "")
  
   except:
     try:
@@ -206,7 +201,7 @@ def obter_config(caminho_conf):
         
     except:
       # Criar o arquivo com as configurações padrão, e então acessar novamente
-      criar_arquivo(caminho_conf, "#Tempo de cada ciclo de execução\ntempo=60\n#Quantidade de pacotes por ciclo de execução que é considerada como um ataque\nqtd=5\n#Configura o mac do gateway. Você pode deixar como auto pra obter autromaticamente. (É fortemente recomendado setar manualmente essa configuração)\nmac_gateway=auto\n#Seta de forma fixa o ip do gateway. Você pode deixar como auto pra obter automaticamente.\nip_gateway=auto\n#Ativa ou desativa o bloqueio de ARP Replies gratuitos (true ou false).\nblock_arp_grat=true\n#Email que vai ser usado pra enviar notificações\nemail=")
+      inicializar_config()
       
     obter_config(caminho_conf)
 
