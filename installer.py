@@ -72,8 +72,9 @@ os.system("ln -s {}/manager.py {}/arpinspect".format(dir_instalacao, PATH))
 
 inicializar_config()
 print("Obtendo configurações iniciais...")
-res = rodar('zenity --question --text="Deseja customizar as configurações iniciais?"')
-if res == "Ok":
+res = rodar('yad --text "Deseja Customizar as Configurações?" \
+--button=yes-:0 --button=gtk-no:1')
+if res == "Sim":
   print("OBTENDO INPUT")
   editar_config_gui()
 
