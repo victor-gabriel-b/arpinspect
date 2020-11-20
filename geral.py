@@ -59,8 +59,8 @@ def rodar(comando):
   linhas = saida.stdout.read().decode("utf-8").split("\n")
   
   i = 0
-  while i<len(linhas):
-    if linhas[i].find("WARNING") != -1:
+  for i in range(len(linhas)):
+    if linhas[i].find('WARNING') != -1:
       del linhas[i]
 
     if linhas[i].find("Error") != -1:

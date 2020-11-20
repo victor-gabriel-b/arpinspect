@@ -3,7 +3,7 @@ from geral import criar_arquivo, rodar, inicializar_config, editar_config_gui
 
 # Obtendo o diretório de instalação
 dir_instalacao = "/opt/arpinspect"
-dir_instalacao = rodar('zenity --file-selection --directory --title="Arpinspect - Selecione o diretório de instalação" --filename="/opt/arpinspect"')
+dir_instalacao = rodar('yad --file-selection --directory --title="Arpinspect - Selecione o diretório de instalação" --filename="/opt/arpinspect"')
 if dir_instalacao == "":
   dir_instalacao = "/opt/arpinspect"
 
