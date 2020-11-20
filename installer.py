@@ -46,7 +46,6 @@ def criar_diretorios(caminho):
 
 criar_diretorios(dir_instalacao)
 
-print("ESSE É O DIRETORIO: "+ dir_instalação)
 print("Instalando...")
 os.rename("main.py", "{}/main.py".format(dir_instalacao))
 os.rename("geral.py", "{}/geral.py".format(dir_instalacao))
