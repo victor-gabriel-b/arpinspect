@@ -3,7 +3,7 @@ from geral import criar_arquivo, rodar, inicializar_config, editar_config_gui
 
 # Obtendo o diretório de instalação
 dir_instalacao = "/opt/arpinspect"
-dir_instalacao = rodar('yad --file-selection --directory --title="Arpinspect - Selecione o diretório de instalação" --filename="/opt/arpinspect"')
+dir_instalacao = rodar('zenity --file-selection --directory --title="Arpinspect - Selecione o diretório de instalação" --filename="/opt/arpinspect"')
 if dir_instalacao == "":
   dir_instalacao = "/opt/arpinspect"
 
@@ -73,7 +73,7 @@ os.system("ln -s {}/manager.py {}/arpinspect".format(dir_instalacao, PATH))
 inicializar_config()
 print("Obtendo configurações iniciais...")
 res = rodar('yad --question --text="Deseja customizar as configurações iniciais?"')
-if res == "Sim":
+if res == "Ok":
   print("OBTENDO INPUT")
   editar_config_gui()
 

@@ -72,6 +72,8 @@ def rodar(comando):
 
   if len(linhas) == 0:
     linhas.append("")
+
+  print("Input recebido: ", linhas)
   return linhas[0]
 
 # Cria o arquivo de configuração com suas configurações padrão
@@ -90,7 +92,7 @@ def editar_config_gui():
           str_valores += "{}\t|{}|".format(config[0], config[1].replace("\n",""))
    
     # Mostrando a tela e obtendo input
-    config_alterada = rodar('yad --forms                                   \
+    config_alterada = rodar('zenity --forms                                   \
       --text "Ver e editar configurações"  \
       --add-entry "Valor da configuração" --add-list="Valor e nome da configuração"    \
       --column-values "Config|Valor"               \
