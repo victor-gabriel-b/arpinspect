@@ -35,14 +35,19 @@ def escrever_no_log(string):
     arq.write("[{}]:{}".format(datetime.datetime.now(), string))
   print("log gravado")
 
-
-# Cria um arquivo no caminho especificado, criando também todos o diretorios necessários
-def criar_arquivo(caminho, conteudo=""):
-  # Quando for botar pra windows vai dar errado *_*
+# Retira a ultima parte de um caminho, transformando o caminho de um arquivo no caminho do seu diretório
+def tirar_arquivo(caminho):
   dirs = caminho.split("/")[:-1]
   dirs_string = ""
   for i in dirs:
     dirs_string += i+"/"
+
+  return dirs_string
+
+# Cria um arquivo no caminho especificado, criando também todos o diretorios necessários
+def criar_arquivo(caminho, conteudo=""):
+  # Quando for botar pra windows vai dar errado *_*
+  dirs_string = (tirar_arquivo(caminho))
 
   if os.path.isdir(dirs_string) == False:
     os.makedirs(dirs_string)  
@@ -57,13 +62,16 @@ def rodar(comando):
            stderr=subprocess.STDOUT)
            
   linhas = saida.stdout.read().decode("utf-8").split("\n")
-  
+  print("Input cru: ", linhas)
+
   i = 0
   while i<len(linhas):
     if linhas[i].find("WARNING") != -1:
+      print("linha mt doida detectada:", linhas[i])
       del linhas[i]
 
     if linhas[i].find("Error") != -1:
+      print("linha mt doida detectada:", linhas[i])
       del linhas[i]
 
     if linhas[i] == "":
@@ -72,6 +80,8 @@ def rodar(comando):
 
   if len(linhas) == 0:
     linhas.append("")
+
+  print("Input recebido: ", linhas)
   return linhas[0]
 
 # Cria o arquivo de configuração com suas configurações padrão
@@ -90,7 +100,7 @@ def editar_config_gui():
           str_valores += "{}\t|{}|".format(config[0], config[1].replace("\n",""))
    
     # Mostrando a tela e obtendo input
-    config_alterada = rodar('yad --forms                                   \
+    config_alterada = rodar('zenity --forms                                   \
       --text "Ver e editar configurações"  \
       --add-entry "Valor da configuração" --add-list="Valor e nome da configuração"    \
       --column-values "Config|Valor"               \
