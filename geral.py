@@ -57,7 +57,8 @@ def rodar(comando):
            stderr=subprocess.STDOUT)
            
   linhas = saida.stdout.read().decode("utf-8").split("\n")
-  
+  print("Input cru: ", linhas)
+
   i = 0
   while i<len(linhas):
     if linhas[i].find("WARNING") != -1:

@@ -68,12 +68,13 @@ criar_arquivo_perm(CAMINHO_PID)
 
 print("Criando link simbólico para o comando...")
 print("ln -s {}/manager.py {}/arpinspect".format(dir_instalacao, PATH))
+os.system("rm {}/arpinspect".format(PATH))
 os.system("ln -s {}/manager.py {}/arpinspect".format(dir_instalacao, PATH))
 
 inicializar_config()
 print("Obtendo configurações iniciais...")
-res = rodar('yad --text "Deseja Customizar as Configurações?" \
---button=yes-:0 --button=gtk-no:1')
+res = rodar('action=$(yad --text "Deseja Customizar as Configurações?" \
+--button=gtk-no:0 --button=gtk-yes:1)\nret=$?\necho $ret')
 if res == "Sim":
   print("OBTENDO INPUT")
   editar_config_gui()
