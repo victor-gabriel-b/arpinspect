@@ -60,10 +60,11 @@ def rodar(comando):
   
   i = 0
   while i<len(linhas):
-    if "Gtk-WARNING" in linhas[i]:
+    if "WARNING" in linhas[i]:
         del linhas[i]
     i += 1
 
+  print(linhas)
   return linhas[0]
 
 # Cria o arquivo de configuração com suas configurações padrão
