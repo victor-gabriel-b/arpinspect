@@ -64,7 +64,7 @@ criar_arquivo_perm(CAMINHO_KILL)
 criar_arquivo_perm(CAMINHO_PID)
 
 print("Criando link simbólico para o comando...")
-os.system("ln -s {}/manager.py {}/arpinspect".format(PATH, dir_instalacao))
+os.system("ln -s {}/manager.py {}/arpinspect".format(dir_instalacao, PATH))
 
 inicializar_config()
 print("Obtendo configurações iniciais...")
