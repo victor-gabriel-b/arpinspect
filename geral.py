@@ -59,11 +59,13 @@ def rodar(comando):
   linhas = saida.stdout.read().decode("utf-8").split("\n")
   
   i = 0
-  for i in range(len(linhas)):
-    if linhas[i].find('WARNING') != -1:
+  while i<len(linhas):
+    if linhas[i].find("WARNING") != -1:
+      print("linha mt doida detectada:", linhas[i])
       del linhas[i]
 
     if linhas[i].find("Error") != -1:
+      print("linha mt doida detectada:", linhas[i])
       del linhas[i]
 
     if linhas[i] == "":
