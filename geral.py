@@ -62,9 +62,16 @@ def rodar(comando):
   while i<len(linhas):
     if "WARNING" in linhas[i]:
         del linhas[i]
+
+    if "Error" in linhas[i]:
+      del linhas[i]
+
+    if linhas[i] == "":
+      del linhas[i]
     i += 1
 
-  print(linhas)
+  if len(linhas) == 0:
+    linhas.append("")
   return linhas[0]
 
 # Cria o arquivo de configuração com suas configurações padrão
