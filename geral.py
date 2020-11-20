@@ -50,7 +50,7 @@ def criar_arquivo(caminho, conteudo=""):
   with open(caminho,"w") as arq:
     arq.write(conteudo)
 
-# Roda um comando do zenity
+# Roda um comando do yad
 def rodar(comando):
   saida = subprocess.Popen(comando, shell=True, 
            stdout=subprocess.PIPE, 
@@ -60,10 +60,10 @@ def rodar(comando):
   
   i = 0
   while i<len(linhas):
-    if "WARNING" in linhas[i]:
-        del linhas[i]
+    if linhas[i].find("WARNING") != -1:
+      del linhas[i]
 
-    if "Error" in linhas[i]:
+    if linhas[i].find("Error") != -1:
       del linhas[i]
 
     if linhas[i] == "":
@@ -90,7 +90,7 @@ def editar_config_gui():
           str_valores += "{}\t|{}|".format(config[0], config[1].replace("\n",""))
    
     # Mostrando a tela e obtendo input
-    config_alterada = rodar('zenity --forms                                   \
+    config_alterada = rodar('yad --forms                                   \
       --text "Ver e editar configurações"  \
       --add-entry "Valor da configuração" --add-list="Valor e nome da configuração"    \
       --column-values "Config|Valor"               \
