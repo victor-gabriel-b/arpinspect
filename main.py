@@ -68,12 +68,14 @@ configs_padrao = {
 
 # Atualiza o arquivo de configurações, alterando apenas uma linha
 def atualizar_arquivo(configs, config_alterada, caminho):
+  print("Caminho configs:", caminho)
   for i in range(len(configs)):
     if configs[i].split("=")[0].replace("\n","").replace("\t","") == config_alterada[1].replace("\n","").replace("\t",""):
       configs[i] = "{}={}\n".format(config_alterada[1].replace("\t",""), config_alterada[0])
       break
 
   with open(caminho, "w") as arq:
+    print("Configs que eu estou tentando escrever:", configs)
     arq.writelines(configs)
   
 
@@ -114,7 +116,7 @@ def obter_config(caminho_conf):
         # Esse if exclui as linhas que começam com #
         if i[0] != "#":
           nome, valor = i.split("=")
-          valor.replace("\n", "")
+          valor = valor.replace("\n", "")
           
           if nome == "tempo":
             config_atual = "tempo"
@@ -154,31 +156,33 @@ def obter_config(caminho_conf):
 
           elif nome == "mac_gateway":
             config_atual = "mac_gateway"
+            print("Valor de mac_gateway", repr(valor))
             # Ver se tem uma configuração manual válida, e usar a padrão (olha o que o sistema diz) caso não tenha
 
-            if valor != "auto":
+            if valor == "auto":
               # Setar a configuração padrão
               mac_gateway = getmac.get_mac_address(ip=ip_gateway, network_request=True)
-          
-            partes = valor.split(":")
-            qtd_letras = 0
-            certo = True
-        
-            for i in partes:
-              for j in i:
-                qtd_letras += 1              
-                if j == "A" or j == "B" or j == "C" or j == "D" or j == "E" or j == "F":
-                  continue
-                elif int(j) >=0 and int(j)<=9:
-                  continue
-                else:
-                  certo = False
-                  break
 
-            if certo:
-              mac_gateway = valor
             else:
-              mac_gateway = getmac.get_mac_address(ip=ip_gateway, network_request=True)
+              partes = valor.split(":")
+              qtd_letras = 0
+              certo = True
+          
+              for i in partes:
+                for j in i:
+                  qtd_letras += 1              
+                  if j == "A" or j == "B" or j == "C" or j == "D" or j == "E" or j == "F":
+                    continue
+                  elif int(j) >=0 and int(j)<=9:
+                    continue
+                  else:
+                    certo = False
+                    break
+
+              if certo:
+                mac_gateway = valor
+              else:
+                mac_gateway = getmac.get_mac_address(ip=ip_gateway, network_request=True)
           
           elif nome == "block_arp_grat":
             config_atual = "block_arp_grat"
