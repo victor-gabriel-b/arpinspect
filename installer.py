@@ -75,7 +75,7 @@ inicializar_config()
 print("Obtendo configurações iniciais...")
 res = rodar('action=$(yad --text "Deseja Customizar as Configurações?" \
 --button=gtk-no:0 --button=gtk-yes:1)\nret=$?\necho $ret')
-if res == "Sim":
+if res == "1":
   print("OBTENDO INPUT")
   editar_config_gui()
 
