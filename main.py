@@ -68,12 +68,14 @@ configs_padrao = {
 
 # Atualiza o arquivo de configurações, alterando apenas uma linha
 def atualizar_arquivo(configs, config_alterada, caminho):
+  print("Caminho configs:", configs)
   for i in range(len(configs)):
     if configs[i].split("=")[0].replace("\n","").replace("\t","") == config_alterada[1].replace("\n","").replace("\t",""):
       configs[i] = "{}={}\n".format(config_alterada[1].replace("\t",""), config_alterada[0])
       break
 
   with open(caminho, "w") as arq:
+    print("Configs que eu estou tentando escrever:", configs)
     arq.writelines(configs)
   
 
