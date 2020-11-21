@@ -35,14 +35,19 @@ def escrever_no_log(string):
     arq.write("[{}]:{}".format(datetime.datetime.now(), string))
   print("log gravado")
 
-
-# Cria um arquivo no caminho especificado, criando também todos o diretorios necessários
-def criar_arquivo(caminho, conteudo=""):
-  # Quando for botar pra windows vai dar errado *_*
+# Retira a ultima parte de um caminho, transformando o caminho de um arquivo no caminho do seu diretório
+def tirar_arquivo(caminho):
   dirs = caminho.split("/")[:-1]
   dirs_string = ""
   for i in dirs:
     dirs_string += i+"/"
+
+  return dirs_string
+
+# Cria um arquivo no caminho especificado, criando também todos o diretorios necessários
+def criar_arquivo(caminho, conteudo=""):
+  # Quando for botar pra windows vai dar errado *_*
+  dirs_string = (tirar_arquivo(caminho))
 
   if os.path.isdir(dirs_string) == False:
     os.makedirs(dirs_string)  

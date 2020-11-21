@@ -19,13 +19,13 @@ import datetime
 import os
 import sys
 import argparse
-from geral import escrever_no_log, criar_arquivo
+from geral import escrever_no_log, criar_arquivo, tirar_arquivo
 
 global caminho_kill
 global caminho_log
 caminho_log = "/var/log/arpinspect"
 caminho_kill = "/etc/arpinspect/kill"
-DIR_INSTALACAO = os.path.realpath(__file__)  # ajeitar isso
+DIR_INSTALACAO = os.path.realpath(__file__).split("/")  # ajeitar isso
 
 parser = argparse.ArgumentParser()
 parser.add_argument("funcionalidade", help=
