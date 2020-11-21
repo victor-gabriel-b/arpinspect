@@ -65,7 +65,7 @@ configs_padrao = {
   "email":"email=none"
 }
 
-escrever_no_log("PROGRAMA INICIALIZADO")
+escrever_no_log("PROGRAMA INICIALIZADO\n")
 
 # Atualiza o arquivo de configurações, alterando apenas uma linha
 def atualizar_arquivo(configs, config_alterada, caminho):
@@ -386,7 +386,7 @@ with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.create_default_context(
 
         elif kill == 1:
           # Finalização do programa
-          escrever_no_log("FIM DA EXECUÇÃO")
+          escrever_no_log("FIM DA EXECUÇÃO\n")
           print("VOU MORREEER")
           with open(caminho_kill, "w") as arq:
             arq.write("0")
@@ -398,7 +398,7 @@ with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.create_default_context(
           raise ValueError
 
       except:
-        escrever_no_log("Valor do sinal de kill inválido. Continuando a execução.")
+        escrever_no_log("Valor do sinal de kill inválido. Continuando a execução.\n")
       
 
     combs = []

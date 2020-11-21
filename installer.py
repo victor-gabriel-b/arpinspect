@@ -80,4 +80,11 @@ if res == "1":
   editar_config_gui()
 
 
+res = rodar('action=$(yad --text "Deseja Customizar as Configurações?" \
+--button=gtk-no:0 --button=gtk-yes:1)\nret=$?\necho $ret')
+if res == "1":
+  with open("/etc/init.d/arpinspect", "w") as arq:
+    arq.write("#!/bin/sh\narpinspect start")
+  
+
 print("Instalado!")
