@@ -116,7 +116,7 @@ def obter_config(caminho_conf):
         # Esse if exclui as linhas que começam com #
         if i[0] != "#":
           nome, valor = i.split("=")
-          valor.replace("\n", "")
+          valor = valor.replace("\n", "")
           
           if nome == "tempo":
             config_atual = "tempo"
@@ -156,7 +156,7 @@ def obter_config(caminho_conf):
 
           elif nome == "mac_gateway":
             config_atual = "mac_gateway"
-            print("Vlor de mac_gateway", valor)
+            print("Valor de mac_gateway", repr(valor))
             # Ver se tem uma configuração manual válida, e usar a padrão (olha o que o sistema diz) caso não tenha
 
             if valor == "auto":
