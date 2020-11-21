@@ -68,7 +68,7 @@ configs_padrao = {
 
 # Atualiza o arquivo de configurações, alterando apenas uma linha
 def atualizar_arquivo(configs, config_alterada, caminho):
-  print("Caminho configs:", configs)
+  print("Caminho configs:", caminho)
   for i in range(len(configs)):
     if configs[i].split("=")[0].replace("\n","").replace("\t","") == config_alterada[1].replace("\n","").replace("\t",""):
       configs[i] = "{}={}\n".format(config_alterada[1].replace("\t",""), config_alterada[0])
@@ -156,6 +156,7 @@ def obter_config(caminho_conf):
 
           elif nome == "mac_gateway":
             config_atual = "mac_gateway"
+            print("Vlor de mac_gateway", valor)
             # Ver se tem uma configuração manual válida, e usar a padrão (olha o que o sistema diz) caso não tenha
 
             if valor == "auto":
