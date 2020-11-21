@@ -25,7 +25,7 @@ global caminho_kill
 global caminho_log
 caminho_log = "/var/log/arpinspect"
 caminho_kill = "/etc/arpinspect/kill"
-DIR_INSTALACAO = os.path.realpath(__file__).split("/")  # ajeitar isso
+DIR_INSTALACAO = tirar_arquivo(os.path.realpath(__file__))  # ajeitar isso
 
 parser = argparse.ArgumentParser()
 parser.add_argument("funcionalidade", help=
