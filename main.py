@@ -65,6 +65,7 @@ configs_padrao = {
   "email":"email=none"
 }
 
+escrever_no_log("PROGRAMA INICIALIZADO")
 
 # Atualiza o arquivo de configurações, alterando apenas uma linha
 def atualizar_arquivo(configs, config_alterada, caminho):
@@ -156,7 +157,6 @@ def obter_config(caminho_conf):
 
           elif nome == "mac_gateway":
             config_atual = "mac_gateway"
-            print("Valor de mac_gateway", repr(valor))
             # Ver se tem uma configuração manual válida, e usar a padrão (olha o que o sistema diz) caso não tenha
 
             if valor == "auto":
@@ -377,6 +377,7 @@ with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.create_default_context(
     # Verificação de se o programa deve fechar neste fim de ciclo
     # Checa o arquivo do caminho_kill, que é alterado pelo gerenciador (o programa que inicia ou fecha o próprio arpinspect)
     with open(caminho_kill, "r") as arq:
+      print("CHECAGEM DA VIDA E DA MORTE")
       try:
         kill = int(arq.read())
         
@@ -386,6 +387,7 @@ with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.create_default_context(
         elif kill == 1:
           # Finalização do programa
           escrever_no_log("FIM DA EXECUÇÃO")
+          print("VOU MORREEER")
           with open(caminho_kill, "w") as arq:
             arq.write("0")
           with open(caminho_pid, "w") as arq:
