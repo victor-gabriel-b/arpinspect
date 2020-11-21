@@ -156,29 +156,30 @@ def obter_config(caminho_conf):
             config_atual = "mac_gateway"
             # Ver se tem uma configuração manual válida, e usar a padrão (olha o que o sistema diz) caso não tenha
 
-            if valor != "auto":
+            if valor == "auto":
               # Setar a configuração padrão
               mac_gateway = getmac.get_mac_address(ip=ip_gateway, network_request=True)
-          
-            partes = valor.split(":")
-            qtd_letras = 0
-            certo = True
-        
-            for i in partes:
-              for j in i:
-                qtd_letras += 1              
-                if j == "A" or j == "B" or j == "C" or j == "D" or j == "E" or j == "F":
-                  continue
-                elif int(j) >=0 and int(j)<=9:
-                  continue
-                else:
-                  certo = False
-                  break
 
-            if certo:
-              mac_gateway = valor
             else:
-              mac_gateway = getmac.get_mac_address(ip=ip_gateway, network_request=True)
+              partes = valor.split(":")
+              qtd_letras = 0
+              certo = True
+          
+              for i in partes:
+                for j in i:
+                  qtd_letras += 1              
+                  if j == "A" or j == "B" or j == "C" or j == "D" or j == "E" or j == "F":
+                    continue
+                  elif int(j) >=0 and int(j)<=9:
+                    continue
+                  else:
+                    certo = False
+                    break
+
+              if certo:
+                mac_gateway = valor
+              else:
+                mac_gateway = getmac.get_mac_address(ip=ip_gateway, network_request=True)
           
           elif nome == "block_arp_grat":
             config_atual = "block_arp_grat"
