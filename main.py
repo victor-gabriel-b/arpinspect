@@ -194,6 +194,7 @@ def obter_config(caminho_conf):
               email_origem = valor.replace("\n", "")
  
   except:
+    print("Config que deu bosta:", config_atual)
     try:
       # Tentar atualizar apenas a configuração que deu errado e chamar a função novamente
       with open(caminho_conf, "r") as conf:
