@@ -55,12 +55,14 @@ if aceito == "0":
   os.rename("interface.py", "{}/interface.py".format(dir_instalacao))
   os.rename("manager.py", "{}/manager.py".format(dir_instalacao))
   os.rename("LICENSE", "{}/LICENSE".format(dir_instalacao))
+  os.rename("uninstaller.py", "{}/uninstaller.py".format(dir_instalacao))
 
   print("Definindo permissões...")
   definir_perms("{}/main.py".format(dir_instalacao), True)
   definir_perms("{}/geral.py".format(dir_instalacao), True)
   definir_perms("{}/interface.py".format(dir_instalacao), True)
   definir_perms("{}/manager.py".format(dir_instalacao), True)
+  definir_perms("{}/uninstaller.py".format(dir_instalacao))
 
 else:
   print("Instalação cancelada.")
