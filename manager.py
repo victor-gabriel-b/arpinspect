@@ -35,7 +35,8 @@ Opções:
   stop (para o programa ao final do ciclo de execução), 
   stop-forced (mata o programa), 
   gui (acessa a interface de gerenciamento),
-  license (mostra a licença do programa)""")
+  license (mostra a licença do programa)
+  uninstall (abre a interface de desinstalação)""")
 args = parser.parse_args()
 arg = args.funcionalidade
 
