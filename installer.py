@@ -3,6 +3,7 @@ from geral import criar_arquivo, rodar, inicializar_config, editar_config_gui
 
 # Obtendo o diretório de instalação
 aceito = rodar('action=$(cat LICENSE | zenity --text-info --checkbox="Eu li e aceitei os termos.")\nret=$?\necho $ret')
+
 if aceito == "0":
   dir_instalacao = rodar('yad --file-selection --directory --title="Arpinspect - Selecione o diretório de instalação" --filename="/opt/arpinspect"')
   if dir_instalacao == "":
@@ -63,10 +64,6 @@ if aceito == "0":
   definir_perms("{}/interface.py".format(dir_instalacao), True)
   definir_perms("{}/manager.py".format(dir_instalacao), True)
   definir_perms("{}/uninstaller.py".format(dir_instalacao))
-
-else:
-  print("Instalação cancelada.")
-
   print("Inicializando arquivos de dados...")
   criar_arquivo_perm(CAMINHO_CONF)
   criar_arquivo_perm(CAMINHO_LOG)
@@ -96,5 +93,8 @@ else:
 
     os.system("update-rc.d arpinspect defaults")
     
-
   print("Instalado!")
+
+else:
+  print("Instalação cancelada.")
+
