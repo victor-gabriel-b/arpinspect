@@ -26,7 +26,7 @@ import getmac
 import smtplib
 import ssl
 import datetime
-from geral import criar_arquivo, escrever_no_log, inicializar_config
+from geral import criar_arquivo, escrever_no_log, inicializar_config, config_block_arp_grat
 # *** testar o escrever no log
 
 global combs
@@ -185,12 +185,7 @@ def obter_config(caminho_conf):
                 mac_gateway = getmac.get_mac_address(ip=ip_gateway, network_request=True)
           
           elif nome == "block_arp_grat":
-            config_atual = "block_arp_grat"
-            # Ativa ou desativa o bloqueio de ARP Replies gratuitos (usando uma configuração disponível no linux)
-            if valor == "true":
-              os.system("echo 1 > /proc/sys/net/ipv4/conf/all/arp_accept")
-            else:
-              os.system("echo 0 > /proc/sys/net/ipv4/conf/all/arp_accept")
+            config_block_arp_grat(valor)
 
           elif nome == "email":
             config_atual = "email"

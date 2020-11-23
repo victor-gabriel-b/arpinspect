@@ -89,6 +89,16 @@ def rodar(comando):
 def inicializar_config():
   criar_arquivo(caminho_conf, "#Tempo de cada ciclo de execução\ntempo=60\n#Quantidade de pacotes por ciclo de execução que é considerada como um ataque\nqtd=5\n#Configura o mac do gateway. Você pode deixar como auto pra obter autromaticamente. (É fortemente recomendado setar manualmente essa configuração)\nmac_gateway=auto\n#Seta de forma fixa o ip do gateway. Você pode deixar como auto pra obter automaticamente.\nip_gateway=auto\n#Ativa ou desativa o bloqueio de ARP Replies gratuitos (true ou false).\nblock_arp_grat=true\n#Email que vai ser usado pra enviar notificações\nemail=")
 
+# Realiza a configuração do bloqueio de arp replies gratuitos
+def config_block_arp_grat():
+  config_atual = "block_arp_grat"
+  # Ativa ou desativa o bloqueio de ARP Replies gratuitos (usando uma configuração disponível no linux)
+  if valor == "true":
+    os.system("echo 1 > /proc/sys/net/ipv4/conf/all/arp_accept")
+  else:
+    os.system("echo 0 > /proc/sys/net/ipv4/conf/all/arp_accept")
+
+# Chama a interface de configuração e faz as alterações selecionadas pelo usuário
 def editar_config_gui():
     # Lendo os valores do arquivo de configuração e formatando
     with open(caminho_conf, "r") as arq:
@@ -123,7 +133,7 @@ def editar_config_gui():
             
           #Config 1 |10|Config 2    |20\
           #|Config 3   |30 |
-
+    if config_alterada[0] == "block_arp_grat"
     return config_alterada
 
 def editar_senha_gui():
@@ -148,6 +158,6 @@ def editar_senha_gui():
     else:
       rodar('zenity --info --text "A senha não foi definida."')
       return True
-      
+
     return False
 

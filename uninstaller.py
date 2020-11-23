@@ -16,10 +16,20 @@ if res == "1":
     shutil.rmtree(Path("/usr/bin/arpinspect").resolve())
   except:
     pass
-    
+
   try:
     os.remove("/var/log/arpinspect")
   except:
     pass
+
+  try:
+    os.remove("/etc/init.d/arpinspect")
+  except:
+    print("Arquivos de inicialização bugados ou inexistentes")
+
+  try:
+    os.system("update-rc.d arpinspect remove")
+  except:
+    print("Arquivos de inicialização bugados ou inexistentes")
 
   rodar('zenity --info --title="Desistalação do Programa" --text=" O Programa Foi Desistalado!" --width 300')
