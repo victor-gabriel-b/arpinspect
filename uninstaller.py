@@ -7,8 +7,19 @@ res = rodar('action=$(yad --text "Você tem certeza que quer desinstalar o arpin
 --button=gtk-no:0 --button=gtk-yes:1)\nret=$?\necho $ret')
 
 if res == "1":
-  shutil.rmtree("/etc/arpinspect")
-  shutil.rmtree(Path("arpinspect").resolve())
-  os.rm("/var/log/arpinspect")
+  try:
+    shutil.rmtree("/etc/arpinspect")
+  except:
+    pass
+
+  try:
+    shutil.rmtree(Path("/usr/bin/arpinspect").resolve())
+  except:
+    pass
+    
+  try:
+    os.remove("/var/log/arpinspect")
+  except:
+    pass
 
   rodar('zenity --info --title="Desistalação do Programa" --text=" O Programa Foi Desistalado!" --width 300')
