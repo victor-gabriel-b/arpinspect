@@ -26,6 +26,7 @@ global caminho_conf
 caminho_log = "/var/log/arpinspect"
 caminho_kill = "/etc/arpinspect/kill"]
 caminho_conf = "/etc/arpinspect/conf"
+caminho_senha = "/etc/arpinspect/passwd"
 
 # Escreve uma string no arquivo de log
 def escrever_no_log(string):
@@ -122,3 +123,31 @@ def editar_config_gui():
             
           #Config 1 |10|Config 2    |20\
           #|Config 3   |30 |
+
+    return config_alterada
+
+def editar_senha_gui():
+    # Mostrando a tela e obtendo a senha nova
+    senha = rodar("zenity --forms --title='Redefinir senha'  \
+      --text='Informe sua senha'       \
+      --add-password=Senha                 \
+      --add-password='Confirme a senha'    \\")
+    
+    if senha != "":
+        senha = senha.split("|")
+
+        if senha[0]!=senha[1]:
+          rodar('zenity --info --text "As senhas não batem."')
+
+        else:
+          # Escrevendo a senha no arquivo
+          with open(caminho_senha, "w") as arq:
+            arq.write(senha[0])
+          return True
+
+    else:
+      rodar('zenity --info --text "A senha não foi definida."')
+      return True
+      
+    return False
+

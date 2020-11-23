@@ -1,5 +1,5 @@
 import os
-from geral import criar_arquivo, rodar, inicializar_config, editar_config_gui
+from geral import criar_arquivo, rodar, inicializar_config, editar_config_gui, editar_senha_gui
 
 # Obtendo o diretório de instalação
 aceito = rodar('action=$(cat LICENSE | zenity --text-info --checkbox="Eu li e aceitei os termos.")\nret=$?\necho $ret')
@@ -48,8 +48,6 @@ if aceito == "0":
 
   criar_diretorios(dir_instalacao)
 
-  rodar('cat LICENSE | zenity --text-info')
-
   print("Instalando...")
   os.rename("main.py", "{}/main.py".format(dir_instalacao))
   os.rename("geral.py", "{}/geral.py".format(dir_instalacao))
@@ -82,8 +80,15 @@ if aceito == "0":
   --button=gtk-no:0 --button=gtk-yes:1)\nret=$?\necho $ret')
   if res == "1":
     print("OBTENDO INPUT")
-    editar_config_gui()
+    while True:
+      escolha = editar_config_gui()
+      if escolha == "" or escolha == "|":
+        break
 
+    while True:
+      escolha = editar_senha_gui()
+      if escolha:
+        break
 
   res = rodar('action=$(yad --text "Você quer que o programa rode ao inicializar?" \
   --button=gtk-no:0 --button=gtk-yes:1)\nret=$?\necho $ret')

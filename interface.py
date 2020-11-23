@@ -20,7 +20,7 @@ caminho_conf = "/etc/arpinspect/conf"
 caminho_log = "/var/log/arpinspect"
 
 
-from geral import rodar, editar_config_gui
+from geral import rodar, editar_config_gui, editar_senha_gui
 
 
 while True:
@@ -33,25 +33,8 @@ while True:
   elif tela_escolhida == "Editar Configurações":
     editar_config_gui() # ver se isso funciona ***
 
-
   elif tela_escolhida == "Editar Senha":
-    # Mostrando a tela e obtendo a senha nova
-    senha = rodar("zenity --forms --title='Redefinir senha'  \
-      --text='Informe sua senha'       \
-      --add-password=Senha                 \
-      --add-password='Confirme a senha'    \\")
+    editar_senha_gui()
     
-    if senha != "":
-        senha = senha.split("|")
-
-        if senha[0]!=senha[1]:
-          rodar('zenity --info --text "As senhas não batem."')
-
-        else:
-          # Escrevendo a senha no arquivo
-          with open(caminho_senha, "w") as arq:
-            arq.write(senha[0])
-    
-
   else:
     break
