@@ -32,7 +32,7 @@ while True:
 
   elif tela_escolhida == "Editar Configurações":
     editar_config_gui() # ver se isso funciona ***
-
+  
   elif tela_escolhida == "Editar Senha":
     editar_senha_gui()
     
