@@ -67,3 +67,6 @@ elif arg == "gui":
 elif arg == "license":
   with open("LICENSE", "r") as l:
     print(l.read)
+
+elif arg == "uninstall":
+  import uninstaller
