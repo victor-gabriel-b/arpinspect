@@ -96,6 +96,7 @@ def inicializar_config():
 def config_block_arp_grat(valor):
   config_atual = "block_arp_grat"
   # Ativa ou desativa o bloqueio de ARP Replies gratuitos (usando uma configuração disponível no linux)
+  print("valor do block arp grat", valor)
   if valor == "true":
     os.system("echo 1 > /proc/sys/net/ipv4/conf/all/arp_accept")
   else:
