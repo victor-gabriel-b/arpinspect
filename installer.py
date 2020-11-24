@@ -81,7 +81,7 @@ if aceito == "0":
     for i in cfg_lista:
       cfg = i.split("=")
       if cfg[0] == "block_arp_grat":
-        config_block_arp_grat(cfg[0])
+        config_block_arp_grat(cfg[1])
       
   print("Obtendo configurações iniciais...")
   res = rodar('action=$(yad --text "Deseja Customizar as Configurações?" \
