@@ -20,13 +20,16 @@ import datetime
 import os
 import subprocess
 
+global caminho_conf
+global caminho_senha
+global caminho_pid
 global caminho_kill
 global caminho_log
-global caminho_conf
+caminho_senha = "/etc/arpinspect/passwd"
+caminho_conf = "/etc/arpinspect/conf"
+caminho_pid = "/etc/arpinspect/pid"
 caminho_log = "/var/log/arpinspect"
 caminho_kill = "/etc/arpinspect/kill"
-caminho_conf = "/etc/arpinspect/conf"
-caminho_senha = "/etc/arpinspect/passwd"
 
 # Escreve uma string no arquivo de log
 def escrever_no_log(string):
