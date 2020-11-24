@@ -209,7 +209,7 @@ def obter_config(caminho_conf):
 
 obter_config(caminho_conf)
 
-print(tempo, qtd, ip_gateway, mac_gateway, email)
+print(tempo_ciclo, qtd_pacotes, ip_gateway, mac_gateway, email_origem)
 
 # Classe que serve pra armazenar as informações de um email à ser enviado
 class Email:

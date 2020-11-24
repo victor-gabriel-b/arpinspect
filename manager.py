@@ -66,7 +66,7 @@ elif arg == "gui":
 
 elif arg == "license":
   with open("{}/LICENSE".format(DIR_INSTALACAO), "r") as l:
-    print(l.read)
+    print(l.read())
 
 elif arg == "uninstall":
   import uninstaller
