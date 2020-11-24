@@ -36,7 +36,7 @@ while True:
   elif tela_escolhida == "Editar Senha":
     editar_senha_gui()
   
-  elif tela_escolhida == "Configurar inicialização no boot":
+  elif tela_escolhida == "Inicialização no boot":
     config_init_gui()
 
   else:
