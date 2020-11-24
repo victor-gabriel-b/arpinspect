@@ -65,7 +65,7 @@ elif arg == "gui":
   os.system("python3 {}/interface.py &".format(DIR_INSTALACAO))
 
 elif arg == "license":
-  with open("LICENSE", "r") as l:
+  with open("{}/LICENSE".format(DIR_INSTALACAO), "r") as l:
     print(l.read)
 
 elif arg == "uninstall":
