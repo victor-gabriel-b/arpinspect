@@ -90,13 +90,35 @@ def inicializar_config():
   criar_arquivo(caminho_conf, "#Tempo de cada ciclo de execução\ntempo=60\n#Quantidade de pacotes por ciclo de execução que é considerada como um ataque\nqtd=5\n#Configura o mac do gateway. Você pode deixar como auto pra obter autromaticamente. (É fortemente recomendado setar manualmente essa configuração)\nmac_gateway=auto\n#Seta de forma fixa o ip do gateway. Você pode deixar como auto pra obter automaticamente.\nip_gateway=auto\n#Ativa ou desativa o bloqueio de ARP Replies gratuitos (true ou false).\nblock_arp_grat=true\n#Email que vai ser usado pra enviar notificações\nemail=")
 
 # Realiza a configuração do bloqueio de arp replies gratuitos
-def config_block_arp_grat():
+def config_block_arp_grat(valor):
   config_atual = "block_arp_grat"
   # Ativa ou desativa o bloqueio de ARP Replies gratuitos (usando uma configuração disponível no linux)
   if valor == "true":
     os.system("echo 1 > /proc/sys/net/ipv4/conf/all/arp_accept")
   else:
     os.system("echo 0 > /proc/sys/net/ipv4/conf/all/arp_accept")
+
+# Abre a tela de configurar inicializaçao no boot e faz as alterações necessárias
+def config_init_gui():
+  valor = rodar('action=$(yad --text "Você quer que o programa rode ao inicializar?" \
+  --button=gtk-no:0 --button=gtk-yes:1)\nret=$?\necho $ret')
+
+  if valor == "1":
+    with open("/etc/init.d/arpinspect", "w") as arq:
+      arq.write("#!/bin/sh\narpinspect start")
+
+    os.system("update-rc.d arpinspect defaults")
+        
+  elif valor == "0":
+    try:
+      os.remove("/etc/init.d/arpinspect")
+    except:
+      print("Arquivos de inicialização bugados ou inexistentes")
+
+    try:
+      os.system("update-rc.d arpinspect remove")
+    except:
+      print("Arquivos de inicialização bugados ou inexistentes")
 
 # Chama a interface de configuração e faz as alterações selecionadas pelo usuário
 def editar_config_gui():
@@ -133,9 +155,12 @@ def editar_config_gui():
             
           #Config 1 |10|Config 2    |20\
           #|Config 3   |30 |
-    if config_alterada[0] == "block_arp_grat"
+    if config_alterada[0] == "block_arp_grat":
+      print(config_alterada) # Testar ***
+      config_block_arp_grat(config_alterada[1]) # Testar
     return config_alterada
 
+# Chama a tela de edição de senha e faz as alterações necessárias
 def editar_senha_gui():
     # Mostrando a tela e obtendo a senha nova
     senha = rodar("zenity --forms --title='Redefinir senha'  \
@@ -160,4 +185,3 @@ def editar_senha_gui():
       return True
 
     return False
-

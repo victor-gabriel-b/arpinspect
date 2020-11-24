@@ -26,6 +26,7 @@ import getmac
 import smtplib
 import ssl
 import datetime
+import socket
 from geral import criar_arquivo, escrever_no_log, inicializar_config, config_block_arp_grat
 # *** testar o escrever no log
 
@@ -346,61 +347,115 @@ except:
 
 global server
 # Preparando pra envio de emails dentro do programa
-with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.create_default_context()) as server:
-  # Obtendo a senha para o uso do email
-  try:
-    with open(caminho_senha, "r") as arq:
-      senha = arq.read() # Variável global estabelecida anteriormente
 
-  #except IOError
-  except:
-    criar_arquivo(caminho_senha)
-    escrever_no_log("Arquivo de senha não encontrado. Criando arquivo vazio em {}\n".format(caminho_senha))
-      
-  # Tentando logar no email
-  try:
-    server.login(email_origem, senha)
-  except:
-    pass
+try:
+  with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.create_default_context()) as server:
+    # Obtendo a senha para o uso do email
+    try:
+      with open(caminho_senha, "r") as arq:
+        senha = arq.read() # Variável global estabelecida anteriormente
 
-  # Setando a senha pra nulo, espero que seja efetivo
-  senha = None
-
-  # Loop principal de execução do programa
-  # Cada iteração é considerada um ciclo de execução do programa
-  while True:
-    # Verificação de se o programa deve fechar neste fim de ciclo
-    # Checa o arquivo do caminho_kill, que é alterado pelo gerenciador (o programa que inicia ou fecha o próprio arpinspect)
-    with open(caminho_kill, "r") as arq:
-      print("CHECAGEM DA VIDA E DA MORTE")
-      try:
-        kill = int(arq.read())
+    #except IOError
+    except:
+      criar_arquivo(caminho_senha)
+      escrever_no_log("Arquivo de senha não encontrado. Criando arquivo vazio em {}\n".format(caminho_senha))
         
-        if kill == 0:
-          pass
+    # Tentando logar no email
+    try:
+      server.login(email_origem, senha)
+    except:
+      pass
 
-        elif kill == 1:
-          # Finalização do programa
-          escrever_no_log("FIM DA EXECUÇÃO\n")
-          print("VOU MORREEER")
-          with open(caminho_kill, "w") as arq:
-            arq.write("0")
-          with open(caminho_pid, "w") as arq:
-            arq.write("")
-          break
+    # Setando a senha pra nulo, espero que seja efetivo
+    senha = None
 
-        else:
-          raise ValueError
+    # Loop principal de execução do programa
+    # Cada iteração é considerada um ciclo de execução do programa
+    while True:
+      # Verificação de se o programa deve fechar neste fim de ciclo
+      # Checa o arquivo do caminho_kill, que é alterado pelo gerenciador (o programa que inicia ou fecha o próprio arpinspect)
+      with open(caminho_kill, "r") as arq:
+        print("CHECAGEM DA VIDA E DA MORTE")
+        try:
+          kill = int(arq.read())
+          
+          if kill == 0:
+            pass
 
-      except:
-        escrever_no_log("Valor do sinal de kill inválido. Continuando a execução.\n")
-      
+          elif kill == 1:
+            # Finalização do programa
+            escrever_no_log("FIM DA EXECUÇÃO\n")
+            print("VOU MORREEER")
+            with open(caminho_kill, "w") as arq:
+              arq.write("0")
+            with open(caminho_pid, "w") as arq:
+              arq.write("")
+            break
 
-    combs = []
-    emails_a_enviar = []
+          else:
+            raise ValueError
 
-    main()
+        except:
+          escrever_no_log("Valor do sinal de kill inválido. Continuando a execução.\n")
+        
 
+      combs = []
+      emails_a_enviar = []
 
+      main()
 
+except:
+  
+  with smtplib.SMTP_SSL(socket.gethostbyname("smtp.gmail.com"), 465, context=ssl.create_default_context()):
+    # Obtendo a senha para o uso do email
+    try:
+      with open(caminho_senha, "r") as arq:
+        senha = arq.read() # Variável global estabelecida anteriormente
 
+    #except IOError
+    except:
+      criar_arquivo(caminho_senha)
+      escrever_no_log("Arquivo de senha não encontrado. Criando arquivo vazio em {}\n".format(caminho_senha))
+        
+    # Tentando logar no email
+    try:
+      server.login(email_origem, senha)
+    except:
+      pass
+
+    # Setando a senha pra nulo, espero que seja efetivo
+    senha = None
+
+    # Loop principal de execução do programa
+    # Cada iteração é considerada um ciclo de execução do programa
+    while True:
+      # Verificação de se o programa deve fechar neste fim de ciclo
+      # Checa o arquivo do caminho_kill, que é alterado pelo gerenciador (o programa que inicia ou fecha o próprio arpinspect)
+      with open(caminho_kill, "r") as arq:
+        print("CHECAGEM DA VIDA E DA MORTE")
+        try:
+          kill = int(arq.read())
+          
+          if kill == 0:
+            pass
+
+          elif kill == 1:
+            # Finalização do programa
+            escrever_no_log("FIM DA EXECUÇÃO\n")
+            print("VOU MORREEER")
+            with open(caminho_kill, "w") as arq:
+              arq.write("0")
+            with open(caminho_pid, "w") as arq:
+              arq.write("")
+            break
+
+          else:
+            raise ValueError
+
+        except:
+          escrever_no_log("Valor do sinal de kill inválido. Continuando a execução.\n")
+
+      combs = []
+      emails_a_enviar = []
+
+      main()

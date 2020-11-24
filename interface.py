@@ -20,11 +20,11 @@ caminho_conf = "/etc/arpinspect/conf"
 caminho_log = "/var/log/arpinspect"
 
 
-from geral import rodar, editar_config_gui, editar_senha_gui
+from geral import rodar, editar_config_gui, editar_senha_gui, config_init_gui
 
 
 while True:
-  tela_escolhida = rodar('zenity --list --column Selecionar --column Arquivos FALSE "Ver Log" TRUE "Editar Configurações" FALSE "Editar Senha" --radiolist')
+  tela_escolhida = rodar('zenity --list --column Selecionar --column Arquivos FALSE "Ver Log" TRUE "Editar Configurações" FALSE "Editar Senha" "Configurar inicialização no boot" FALSE --radiolist')
 
   if tela_escolhida == "Ver Log":
     # Lê o arquivo de log e exibe na tela
@@ -32,9 +32,12 @@ while True:
 
   elif tela_escolhida == "Editar Configurações":
     editar_config_gui() # ver se isso funciona ***
-  
+
   elif tela_escolhida == "Editar Senha":
     editar_senha_gui()
-    
+  
+  elif tela_escolhida == "Configurar inicialização no boot":
+    config_init_gui()
+
   else:
     break
