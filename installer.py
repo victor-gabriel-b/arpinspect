@@ -1,5 +1,5 @@
 import os
-from geral import criar_arquivo, rodar, inicializar_config, editar_config_gui, editar_senha_gui
+from geral import criar_arquivo, rodar, inicializar_config, editar_config_gui, editar_senha_gui, config_init_gui
 
 # Obtendo o diretório de instalação
 aceito = rodar('action=$(cat LICENSE | zenity --text-info --checkbox="Eu li e aceitei os termos.")\nret=$?\necho $ret')
@@ -90,13 +90,8 @@ if aceito == "0":
       if escolha:
         break
 
-  res = rodar('action=$(yad --text "Você quer que o programa rode ao inicializar?" \
-  --button=gtk-no:0 --button=gtk-yes:1)\nret=$?\necho $ret')
-  if res == "1":
-    with open("/etc/init.d/arpinspect", "w") as arq:
-      arq.write("#!/bin/sh\narpinspect start")
-
-    os.system("update-rc.d arpinspect defaults")
+  config_init_gui()
+     # Testar ***
     
   print("Instalado!")
 
