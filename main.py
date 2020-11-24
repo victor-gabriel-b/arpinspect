@@ -111,6 +111,7 @@ def obter_config(caminho_conf):
   try:
     with open(caminho_conf, "r") as conf:
       cfg_lista = conf.readlines()
+      print("A LISTA DAS CONFIGS:", cfg_lista)
 
       # Altera pelas linhas do arquivo de configuração, tomando as ações necessárias para cada configurar
 
@@ -207,6 +208,8 @@ def obter_config(caminho_conf):
     obter_config(caminho_conf)
 
 obter_config(caminho_conf)
+
+print(tempo, qtd, ip_gateway, mac_gateway, email)
 
 # Classe que serve pra armazenar as informações de um email à ser enviado
 class Email:
