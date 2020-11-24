@@ -1,5 +1,5 @@
 import os
-from geral import criar_arquivo, rodar, inicializar_config, editar_config_gui, editar_senha_gui, config_init_gui
+from geral import criar_arquivo, rodar, inicializar_config, editar_config_gui, editar_senha_gui, config_init_gui, config_block_arp_grat
 
 # Obtendo o diretório de instalação
 aceito = rodar('action=$(cat LICENSE | zenity --text-info --checkbox="Eu li e aceitei os termos.")\nret=$?\necho $ret')
@@ -75,6 +75,14 @@ if aceito == "0":
   os.system("ln -s {}/manager.py {}/arpinspect".format(dir_instalacao, PATH))
 
   inicializar_config()
+  with open(CAMINHO_CONF, "r") as conf:
+    cfg_lista = conf.readlines()
+
+    for i in cfg_lista:
+      cfg = i.split("=")
+      if cfg[0] == "block_arp_grat":
+        config_block_arp_grat(cfg[0])
+      
   print("Obtendo configurações iniciais...")
   res = rodar('action=$(yad --text "Deseja Customizar as Configurações?" \
   --button=gtk-no:0 --button=gtk-yes:1)\nret=$?\necho $ret')

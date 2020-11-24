@@ -20,21 +20,23 @@ import datetime
 import os
 import subprocess
 
+global caminho_conf
+global caminho_senha
+global caminho_pid
 global caminho_kill
 global caminho_log
-global caminho_conf
-caminho_log = "/var/log/arpinspect"
-caminho_kill = "/etc/arpinspect/kill"]
-caminho_conf = "/etc/arpinspect/conf"
 caminho_senha = "/etc/arpinspect/passwd"
+caminho_conf = "/etc/arpinspect/conf"
+caminho_pid = "/etc/arpinspect/pid"
+caminho_log = "/var/log/arpinspect"
+caminho_kill = "/etc/arpinspect/kill"
 
 # Escreve uma string no arquivo de log
 def escrever_no_log(string):
-  print("Abriu a função de log")
+  
   global caminho_log
   with open(caminho_log, "a") as arq:
     arq.write("[{}]:{}".format(datetime.datetime.now(), string))
-  print("log gravado")
 
 # Retira a ultima parte de um caminho, transformando o caminho de um arquivo no caminho do seu diretório
 def tirar_arquivo(caminho):
@@ -63,16 +65,13 @@ def rodar(comando):
            stderr=subprocess.STDOUT)
            
   linhas = saida.stdout.read().decode("utf-8").split("\n")
-  print("Input cru: ", linhas)
 
   i = 0
   while i<len(linhas):
     if linhas[i].find("WARNING") != -1:
-      print("linha mt doida detectada:", linhas[i])
       del linhas[i]
 
     if linhas[i].find("Error") != -1:
-      print("linha mt doida detectada:", linhas[i])
       del linhas[i]
 
     if linhas[i] == "":
@@ -82,17 +81,18 @@ def rodar(comando):
   if len(linhas) == 0:
     linhas.append("")
 
-  print("Input recebido: ", linhas)
   return linhas[0]
 
 # Cria o arquivo de configuração com suas configurações padrão
 def inicializar_config():
-  criar_arquivo(caminho_conf, "#Tempo de cada ciclo de execução\ntempo=60\n#Quantidade de pacotes por ciclo de execução que é considerada como um ataque\nqtd=5\n#Configura o mac do gateway. Você pode deixar como auto pra obter autromaticamente. (É fortemente recomendado setar manualmente essa configuração)\nmac_gateway=auto\n#Seta de forma fixa o ip do gateway. Você pode deixar como auto pra obter automaticamente.\nip_gateway=auto\n#Ativa ou desativa o bloqueio de ARP Replies gratuitos (true ou false).\nblock_arp_grat=true\n#Email que vai ser usado pra enviar notificações\nemail=")
+  criar_arquivo(caminho_conf, "#Tempo de cada ciclo de execução\ntempo=60\n#Quantidade de pacotes por ciclo de execução que é considerada como um ataque\nqtd=5\n#Configura o mac do gateway. Você pode deixar como auto pra obter autromaticamente. (É fortemente recomendado setar manualmente essa configuração)\nmac_gateway=auto\n#Seta de forma fixa o ip do gateway. Você pode deixar,0 como auto pra obter automaticamente.\nip_gateway=auto\n#Ativa ou desativa o bloqueio de ARP Replies gratuitos (true ou false).\nblock_arp_grat=true\n#Email que vai ser usado pra enviar notificações\nemail=")
 
 # Realiza a configuração do bloqueio de arp replies gratuitos
 def config_block_arp_grat(valor):
   config_atual = "block_arp_grat"
   # Ativa ou desativa o bloqueio de ARP Replies gratuitos (usando uma configuração disponível no linux)
+  valor = valor.replace("\n", "")
+
   if valor == "true":
     os.system("echo 1 > /proc/sys/net/ipv4/conf/all/arp_accept")
   else:
@@ -155,11 +155,9 @@ def editar_config_gui():
             
           #Config 1 |10|Config 2    |20\
           #|Config 3   |30 |
-    print("config_alterada:", config_alterada)
     try:
       if config_alterada[1] == "block_arp_grat":
-        print(config_alterada) # Testar ***
-        config_block_arp_grat(config_alterada[1]) #   Testar
+        config_block_arp_grat(config_alterada[0]) #   Testar
     except IndexError:
       pass
       
