@@ -156,7 +156,7 @@ def editar_config_gui():
           #Config 1 |10|Config 2    |20\
           #|Config 3   |30 |
     print("config_alterada:", config_alterada)
-    if config_alterada == "block_arp_grat":
+    if config_alterada[0] == "block_arp_grat":
       print(config_alterada) # Testar ***
       config_block_arp_grat(config_alterada[1]) # Testar
     return config_alterada
