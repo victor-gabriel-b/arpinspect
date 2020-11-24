@@ -10,17 +10,17 @@ if res == "1":
   try:
     shutil.rmtree("/etc/arpinspect")
   except:
-    pass
+    print("Não consegui remover o /etc/arpinspect")
 
   try:
     shutil.rmtree(Path("/usr/bin/arpinspect").resolve())
   except:
-    pass
+    print("Não consegui remover o diretorio de instalação:", Path("/usr/bin/arpinspect").resolve())
 
   try:
     os.remove("/var/log/arpinspect")
   except:
-    pass
+    print("Não consegui remover o log (/var/log/arpinspecy")
 
   try:
     os.remove("/etc/init.d/arpinspect")
@@ -32,4 +32,9 @@ if res == "1":
   except:
     print("Arquivos de inicialização bugados ou inexistentes")
 
+  try:
+    os.remove("/usr/bin/arpinspect")
+  except:
+    print("Não consegui remover o link no PATH (/usr/bin/arpinspect)")
+    
   rodar('zenity --info --title="Desistalação do Programa" --text=" O Programa Foi Desistalado!" --width 300')
