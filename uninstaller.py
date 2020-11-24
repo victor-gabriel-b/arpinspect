@@ -12,7 +12,7 @@ if res == "1":
   except:
     print("Não consegui remover o /etc/arpinspect")
 
-  DIR_INSTALACAO = tirar_arquivo(Path("/usr/bin/arpinspect").resolve())
+  DIR_INSTALACAO = tirar_arquivo(str(Path("/usr/bin/arpinspect").resolve()))
   try:
     shutil.rmtree(DIR_INSTALACAO)
   except:
