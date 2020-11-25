@@ -70,14 +70,14 @@ escrever_no_log("PROGRAMA INICIALIZADO\n")
 
 # Atualiza o arquivo de configurações, alterando apenas uma linha
 def atualizar_arquivo(configs, config_alterada, caminho):
-  print("Caminho configs:", caminho)
+
   for i in range(len(configs)):
     if configs[i].split("=")[0].replace("\n","").replace("\t","") == config_alterada[1].replace("\n","").replace("\t",""):
       configs[i] = "{}={}\n".format(config_alterada[1].replace("\t",""), config_alterada[0])
       break
 
   with open(caminho, "w") as arq:
-    print("Configs que eu estou tentando escrever:", configs)
+   configs)
     arq.writelines(configs)
   
 
@@ -93,6 +93,10 @@ mac_gateway = getmac.get_mac_address(ip=ip_gateway, network_request= True)
 
 global email_origem  # O email que será notificado e que enviára o email
 email_origem = ""
+
+with open(caminho_conf, "r") as conf:
+  cfg_lista = conf.readlines()
+  print("A LISTA DAS CONFIGS", cfg_lista)
 
 # Obter configurações a partir do arquivo de configurações (normalmente /etc/arpinspect/conf)
 def obter_config(caminho_conf):
@@ -111,7 +115,7 @@ def obter_config(caminho_conf):
   try:
     with open(caminho_conf, "r") as conf:
       cfg_lista = conf.readlines()
-      print("A LISTA DAS CONFIGS:", cfg_lista)
+
 
       # Altera pelas linhas do arquivo de configuração, tomando as ações necessárias para cada configurar
 
@@ -166,20 +170,24 @@ def obter_config(caminho_conf):
               mac_gateway = getmac.get_mac_address(ip=ip_gateway, network_request=True)
 
             else:
-              partes = valor.split(":")
-              qtd_letras = 0
-              certo = True
-          
-              for i in partes:
-                for j in i:
-                  qtd_letras += 1              
-                  if j == "A" or j == "B" or j == "C" or j == "D" or j == "E" or j == "F":
-                    continue
-                  elif int(j) >=0 and int(j)<=9:
-                    continue
-                  else:
-                    certo = False
-                    break
+              try:
+                partes = valor.split(":")
+                qtd_letras = 0
+                certo = True
+            
+                for i in partes:
+                  for j in i:
+                    qtd_letras += 1 
+                    j = j.upper()             
+                    if j == "A" or j == "B" or j == "C" or j == "D" or j == "E" or j == "F":
+                      continue
+                    elif int(j) >=0 and int(j)<=9:
+                      continue
+                    else:
+                      certo = False
+                      break
+              except:
+                certo = False
 
               if certo:
                 mac_gateway = valor

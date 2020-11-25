@@ -3,9 +3,10 @@ import os
 from pathlib import Path
 from geral import rodar, tirar_arquivo
 
-res = rodar('action=$(yad --text "Você tem certeza que quer desinstalar o arpinspect e todos os seus arquivos?" \
+res = rodar('action=$(yad --text "Você tem certeza que quer desinstalar o arpinspect e todos os seus arquivos? (Obs: Isso deletará completamente a pasta de instalação!)" \
 --button=gtk-no:0 --button=gtk-yes:1)\nret=$?\necho $ret')
 
+print("QUALQUER ARQUIVO QUE JÁ NÃO EXISTE OU NÃO PODE SER REMOVIDO SERÁ")
 if res == "1":
   try:
     shutil.rmtree("/etc/arpinspect")
@@ -21,7 +22,7 @@ if res == "1":
   try:
     os.remove("/var/log/arpinspect")
   except:
-    print("Não consegui remover o log (/var/log/arpinspecy")
+    print("Não consegui remover o log (/var/log/arpinspect")
 
   try:
     os.remove("/etc/init.d/arpinspect")
