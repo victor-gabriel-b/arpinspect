@@ -5,12 +5,10 @@ from geral import criar_arquivo, rodar, inicializar_config, editar_config_gui, e
 aceito = rodar('action=$(cat LICENSE | zenity --text-info --checkbox="Eu li e aceitei os termos.")\nret=$?\necho $ret')
 
 if aceito == "0":
-  dir_instalacao = rodar('yad --file-selection --directory --title="Arpinspect - Selecione o diretório de instalação" --filename="/opt/arpinspect"')
+  dir_instalacao = rodar('yad --file-selection --directory --title="Arpinspect - Selecione o diretório de instalação (IMPORTANTE: escolha uma pasta que seja apenas para o arpinspect)" --filename="/opt/arpinspect"')
   if dir_instalacao == "":
     dir_instalacao = "/opt/arpinspect"
 
-  print()
-  print("Diretório de instalação recebido {}".format(dir_instalacao))
 
   DIR_CONFIG = "/etc/arpinspect"
   PATH = "/usr/bin"
@@ -62,6 +60,7 @@ if aceito == "0":
   definir_perms("{}/interface.py".format(dir_instalacao), True)
   definir_perms("{}/manager.py".format(dir_instalacao), True)
   definir_perms("{}/uninstaller.py".format(dir_instalacao))
+
   print("Inicializando arquivos de dados...")
   criar_arquivo_perm(CAMINHO_CONF)
   criar_arquivo_perm(CAMINHO_LOG)
@@ -70,7 +69,6 @@ if aceito == "0":
   criar_arquivo_perm(CAMINHO_PID)
 
   print("Criando link simbólico para o comando...")
-  print("ln -s {}/manager.py {}/arpinspect".format(dir_instalacao, PATH))
   os.system("rm {}/arpinspect".format(PATH))
   os.system("ln -s {}/manager.py {}/arpinspect".format(dir_instalacao, PATH))
 
