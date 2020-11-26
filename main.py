@@ -93,10 +93,6 @@ mac_gateway = getmac.get_mac_address(ip=ip_gateway, network_request= True)
 global email_origem  # O email que será notificado e que enviára o email
 email_origem = ""
 
-with open(caminho_conf, "r") as conf:
-  cfg_lista = conf.readlines()
-  print("A LISTA DAS CONFIGS", cfg_lista)
-
 # Obter configurações a partir do arquivo de configurações (normalmente /etc/arpinspect/conf)
 def obter_config(caminho_conf):
   global configs_padrao
@@ -202,7 +198,6 @@ def obter_config(caminho_conf):
               email_origem = valor.replace("\n", "")
  
   except:
-    print("Config que deu bosta:", config_atual)
     try:
       # Tentar atualizar apenas a configuração que deu errado e chamar a função novamente
       with open(caminho_conf, "r") as conf:
@@ -215,8 +210,6 @@ def obter_config(caminho_conf):
     obter_config(caminho_conf)
 
 obter_config(caminho_conf)
-
-print(tempo_ciclo, qtd_pacotes, ip_gateway, mac_gateway, email_origem)
 
 # Classe que serve pra armazenar as informações de um email à ser enviado
 class Email:
@@ -258,23 +251,18 @@ def trata_pacote(pacote):
 
 # Função pra enviar um email
 def enviar_email(assunto, conteudo):
-  print("entrou na função de enviar email")
   global senha
   global email_origem
   
   if email_origem == "":
-    print("ihh ta sem email")
     escrever_no_log("Nenhum email foi inserido. Nada será enviado.\n")
   
 
   # Formatando a mensagem
   mensagem = 'Subject: {}\n\n{}'.format(assunto,conteudo).encode("utf-8")
-  print("Mensagem formatada")
 
-  print("enviando email")
   # Enviando o email
   server.sendmail(email_origem, email_origem, mensagem)
-  print("email enviado")
 
 # Verifica cada combinacao ip/mac, vendo se é igual à do pacote recebido
 # Caso seja, aumenta o contador da combinação
@@ -341,12 +329,9 @@ def main():
         break
       
     if ja_enviado == False:
-      print("ataque do gateway detectado")
       emails_enviados.append(email)
       enviar_email("Notificação do ArpInspect","Um MAC diferente do configurado dizendo ter o ip do Gateway ({}) foi detectado em um de seus hosts({}): de {} (original) para {}.\n\n O MAC em questão não foi bloqueado, pois pode se tratar de uma mudança legítima.".format(email.ip, os.uname()[1], mac_gateway, email.mac)) # *** add tempo aqui
-      print("email enviado, em teoria")
       escrever_no_log("Ataque Detectado (MAC diferente daquele do gateway cadastrado afirmando ter o IP do gateway): {} {}\n".format(i.ip,i.mac))
-      print("Entrada no log feita, em teoria")
 
 # Testando se o arquivo de log existe, e criando ele caso não exista
 try:
@@ -385,7 +370,6 @@ try:
       # Verificação de se o programa deve fechar neste fim de ciclo
       # Checa o arquivo do caminho_kill, que é alterado pelo gerenciador (o programa que inicia ou fecha o próprio arpinspect)
       with open(caminho_kill, "r") as arq:
-        print("CHECAGEM DA VIDA E DA MORTE")
         try:
           kill = int(arq.read())
           
@@ -395,7 +379,6 @@ try:
           elif kill == 1:
             # Finalização do programa
             escrever_no_log("FIM DA EXECUÇÃO\n")
-            print("VOU MORREEER")
             with open(caminho_kill, "w") as arq:
               arq.write("0")
             with open(caminho_pid, "w") as arq:
@@ -442,7 +425,6 @@ except:
       # Verificação de se o programa deve fechar neste fim de ciclo
       # Checa o arquivo do caminho_kill, que é alterado pelo gerenciador (o programa que inicia ou fecha o próprio arpinspect)
       with open(caminho_kill, "r") as arq:
-        print("CHECAGEM DA VIDA E DA MORTE")
         try:
           kill = int(arq.read())
           
@@ -452,7 +434,6 @@ except:
           elif kill == 1:
             # Finalização do programa
             escrever_no_log("FIM DA EXECUÇÃO\n")
-            print("VOU MORREEER")
             with open(caminho_kill, "w") as arq:
               arq.write("0")
             with open(caminho_pid, "w") as arq:
