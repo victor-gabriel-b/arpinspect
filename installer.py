@@ -5,9 +5,22 @@ from geral import criar_arquivo, rodar, inicializar_config, editar_config_gui, e
 aceito = rodar('action=$(cat LICENSE | zenity --text-info --checkbox="Eu li e aceitei os termos.")\nret=$?\necho $ret')
 
 if aceito == "0":
+  def criar_diretorios(caminho):
+    dirs = caminho.split("/")
+    dirs_string = ""
+    for i in dirs:
+      dirs_string += i+"/"
+
+    if os.path.isdir(dirs_string) == False:
+      os.makedirs(dirs_string)  
+  
+  criar_diretorios("/opt/arpinspect")
   dir_instalacao = rodar('yad --file-selection --directory --title="Arpinspect - Selecione o diretório de instalação (IMPORTANTE: escolha uma pasta que seja apenas para o arpinspect)" --filename="/opt/arpinspect"')
   if dir_instalacao == "":
     dir_instalacao = "/opt/arpinspect"
+
+  if dir_instalacao != "/opt/arpinspect":
+    os.rmdir("/opt/arpinspect")
 
 
   DIR_CONFIG = "/etc/arpinspect"
@@ -34,15 +47,6 @@ if aceito == "0":
     criar_arquivo(arquivo)
 
     definir_perms(arquivo, exec)
-
-  def criar_diretorios(caminho):
-    dirs = caminho.split("/")
-    dirs_string = ""
-    for i in dirs:
-      dirs_string += i+"/"
-
-    if os.path.isdir(dirs_string) == False:
-      os.makedirs(dirs_string)  
 
   criar_diretorios(dir_instalacao)
 

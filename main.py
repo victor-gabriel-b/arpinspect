@@ -77,7 +77,6 @@ def atualizar_arquivo(configs, config_alterada, caminho):
       break
 
   with open(caminho, "w") as arq:
-   configs)
     arq.writelines(configs)
   
 
