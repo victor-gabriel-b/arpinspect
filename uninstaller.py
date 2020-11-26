@@ -6,7 +6,7 @@ from geral import rodar, tirar_arquivo
 res = rodar('action=$(yad --text "Você tem certeza que quer desinstalar o arpinspect e todos os seus arquivos? (Obs: Isso deletará completamente a pasta de instalação!)" \
 --button=gtk-no:0 --button=gtk-yes:1)\nret=$?\necho $ret')
 
-print("QUALQUER ARQUIVO QUE JÁ NÃO EXISTE OU NÃO PODE SER REMOVIDO SERÁ")
+print("Observação: Pra todo arquivo que já não existe ou não pode ser removido, uma mensagem será mostrada.")
 if res == "1":
   try:
     shutil.rmtree("/etc/arpinspect")

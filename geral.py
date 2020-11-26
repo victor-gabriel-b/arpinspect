@@ -36,8 +36,7 @@ def escrever_no_log(string):
   
   global caminho_log
   with open(caminho_log, "a") as arq:
-    arq.write("[{}]:{}".format(datettring))
-  print("log gravado")
+    arq.write("[{}]:{}".format(datetime.datetime.now(), string))
 
 # Retira a ultima parte de um caminho, transformando o caminho de um arquivo no caminho do seu diretório
 def tirar_arquivo(caminho):
@@ -66,16 +65,13 @@ def rodar(comando):
            stderr=subprocess.STDOUT)
            
   linhas = saida.stdout.read().decode("utf-8").split("\n")
-  print("Input cru: ", linhas)
 
   i = 0
   while i<len(linhas):
     if linhas[i].find("WARNING") != -1:
-      print("linha mt doida detectada:", linhas[i])
       del linhas[i]
 
     if linhas[i].find("Error") != -1:
-      print("linha mt doida detectada:", linhas[i])
       del linhas[i]
 
     if linhas[i] == "":
@@ -85,7 +81,6 @@ def rodar(comando):
   if len(linhas) == 0:
     linhas.append("")
 
-  print("Input recebido: ", linhas)
   return linhas[0]
 
 # Cria o arquivo de configuração com suas configurações padrão
@@ -160,10 +155,8 @@ def editar_config_gui():
             
           #Config 1 |10|Config 2    |20\
           #|Config 3   |30 |
-    print("config_alterada:", config_alterada)
     try:
       if config_alterada[1] == "block_arp_grat":
-        print(config_alterada) # Testar ***
         config_block_arp_grat(config_alterada[0]) #   Testar
     except IndexError:
       pass
